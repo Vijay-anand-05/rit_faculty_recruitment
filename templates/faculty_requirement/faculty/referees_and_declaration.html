@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaration & Referees</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: #3498db;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #a0aec0;
+        }
+
+        .referee-block {
+            background: #f8fafc;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .referee-block:before {
+            content: attr(data-index);
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #3498db;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-add {
+            background: #f1f5f9;
+            color: #2c3e50;
+            border: 2px dashed #cbd5e1;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .btn-add:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+
+        .btn-prev {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-prev:hover {
+            background: #475569;
+        }
+
+        .btn-submit {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #0da271;
+        }
+
+        .remove-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .remove-btn:hover {
+            background: #fecaca;
+        }
+
+        .icon {
+            font-size: 16px;
+        }
+
+        .required:after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        .instructions {
+            background: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .declaration-box {
+            background: #f0fdf4;
+            border: 2px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .declaration-box h3 {
+            color: #059669;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .declaration-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .declaration-checkbox {
+            width: 24px;
+            height: 24px;
+            accent-color: #10b981;
+            cursor: pointer;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e0e6ed, transparent);
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .header, .form-section {
+                padding: 25px;
+            }
+            
+            .declaration-content {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Declaration & Referees</h1>
+            <p>Final step: Add referees and submit your application</p>
+        </div>
+
+        <!-- Main Form -->
+        <div class="form-section">
+            <form method="post" id="declarationForm">
+                {% csrf_token %}
+                
+                <!-- Instructions -->
+                <div class="instructions">
+                    <p><strong>Instructions:</strong> Please provide details of at least one referee. You can add up to three referees.</p>
+                    <p>All information must be accurate before submitting your application.</p>
+                </div>
+
+                <!-- Referees Section -->
+                <h2 class="section-title">Referees Details</h2>
+                
+                <div id="referees-container">
+                    {% if referees %}
+                        {% for r in referees %}
+                        <div class="referee-block" data-index="{{ forloop.counter }}">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="ref_name_{{ forloop.counter }}" class="required">Full Name</label>
+                                    <input type="text" 
+                                           name="ref_name[]" 
+                                           id="ref_name_{{ forloop.counter }}" 
+                                           class="form-control" 
+                                           placeholder="e.g., Dr. John Smith"
+                                           value="{{ r.name }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="ref_designation_{{ forloop.counter }}" class="required">Designation</label>
+                                    <input type="text" 
+                                           name="ref_designation[]" 
+                                           id="ref_designation_{{ forloop.counter }}" 
+                                           class="form-control" 
+                                           placeholder="e.g., Professor, Head of Department"
+                                           value="{{ r.designation }}">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="ref_organization_{{ forloop.counter }}" class="required">Organization</label>
+                                    <input type="text" 
+                                           name="ref_organization[]" 
+                                           id="ref_organization_{{ forloop.counter }}" 
+                                           class="form-control" 
+                                           placeholder="e.g., University of California"
+                                           value="{{ r.organization }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="ref_contact_{{ forloop.counter }}" class="required">Contact Number</label>
+                                    <input type="tel" 
+                                           name="ref_contact[]" 
+                                           id="ref_contact_{{ forloop.counter }}" 
+                                           class="form-control" 
+                                           placeholder="e.g., +1 (555) 123-4567"
+                                           value="{{ r.contact_number }}">
+                                </div>
+                            </div>
+                            
+                            {% if not forloop.first %}
+                            <button type="button" class="remove-btn" onclick="removeReferee(this)">
+                                <i class="fas fa-trash-alt"></i> Remove Referee
+                            </button>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Default referee block -->
+                        <div class="referee-block" data-index="1">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="ref_name_1" class="required">Full Name</label>
+                                    <input type="text" 
+                                           name="ref_name[]" 
+                                           id="ref_name_1" 
+                                           class="form-control" 
+                                           placeholder="e.g., Dr. John Smith">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="ref_designation_1" class="required">Designation</label>
+                                    <input type="text" 
+                                           name="ref_designation[]" 
+                                           id="ref_designation_1" 
+                                           class="form-control" 
+                                           placeholder="e.g., Professor, Head of Department">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="ref_organization_1" class="required">Organization</label>
+                                    <input type="text" 
+                                           name="ref_organization[]" 
+                                           id="ref_organization_1" 
+                                           class="form-control" 
+                                           placeholder="e.g., University of California">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="ref_contact_1" class="required">Contact Number</label>
+                                    <input type="tel" 
+                                           name="ref_contact[]" 
+                                           id="ref_contact_1" 
+                                           class="form-control" 
+                                           placeholder="e.g., +1 (555) 123-4567">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="button" class="btn btn-add" onclick="addReferee()">
+                    <i class="fas fa-plus-circle"></i> Add Another Referee
+                </button>
+
+                <!-- Section Divider -->
+                <div class="section-divider"></div>
+
+                <!-- Declaration Section -->
+                <div class="declaration-box">
+                    <h3><i class="fas fa-file-contract icon"></i> Declaration</h3>
+                    <div class="declaration-content">
+                        <input type="checkbox" 
+                               id="declaration_checkbox" 
+                               name="declaration" 
+                               class="declaration-checkbox" 
+                               required>
+                        <label for="declaration_checkbox" style="font-size: 16px; color: #2c3e50; cursor: pointer;">
+                            <strong>I hereby declare that all the information provided in this application is true, complete, and accurate to the best of my knowledge.</strong><br>
+                            <span style="font-size: 14px; color: #64748b; display: block; margin-top: 8px;">
+                                I understand that any false statement or omission may lead to disqualification or termination of appointment.
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="button-group">
+                    <button type="button" class="btn btn-prev" onclick="window.location.href='{% url 'programmes_and_publications' %}'">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let refereeCounter = {{ referees|length|default:1 }};
+        
+        function addReferee() {
+            if (refereeCounter >= 3) {
+                alert('Maximum 3 referees allowed.');
+                return;
+            }
+            
+            refereeCounter++;
+            const container = document.getElementById('referees-container');
+            const firstBlock = container.querySelector('.referee-block');
+            const newBlock = firstBlock.cloneNode(true);
+            
+            // Update index number
+            newBlock.setAttribute('data-index', refereeCounter);
+            
+            // Clear all input values in the new block
+            newBlock.querySelectorAll('input').forEach(input => {
+                input.value = '';
+                
+                // Update IDs to be unique
+                const oldId = input.id;
+                if (oldId) {
+                    const baseId = oldId.replace(/\d+$/, '');
+                    const newId = baseId + '_' + refereeCounter;
+                    input.id = newId;
+                    
+                    // Update label for attribute if exists
+                    const label = newBlock.querySelector(`label[for="${oldId}"]`);
+                    if (label) {
+                        label.setAttribute('for', newId);
+                    }
+                }
+            });
+            
+            // Add remove button
+            const removeBtn = newBlock.querySelector('.remove-btn');
+            if (!removeBtn) {
+                const newRemoveBtn = document.createElement('button');
+                newRemoveBtn.type = 'button';
+                newRemoveBtn.className = 'remove-btn';
+                newRemoveBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove Referee';
+                newRemoveBtn.onclick = function() { removeReferee(this); };
+                newBlock.appendChild(newRemoveBtn);
+            }
+            
+            container.appendChild(newBlock);
+            newBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        function removeReferee(button) {
+            const block = button.closest('.referee-block');
+            if (document.querySelectorAll('.referee-block').length > 1) {
+                block.remove();
+                updateRefereeIndices();
+            } else {
+                alert('You must have at least one referee.');
+            }
+        }
+        
+        function updateRefereeIndices() {
+            const blocks = document.querySelectorAll('.referee-block');
+            blocks.forEach((block, index) => {
+                block.setAttribute('data-index', index + 1);
+                // Update IDs
+                block.querySelectorAll('input, label').forEach(element => {
+                    const oldId = element.id || element.getAttribute('for');
+                    if (oldId) {
+                        const baseId = oldId.replace(/\d+$/, '');
+                        const newId = baseId + '_' + (index + 1);
+                        if (element.id) element.id = newId;
+                        if (element.getAttribute('for')) element.setAttribute('for', newId);
+                    }
+                });
+            });
+            refereeCounter = blocks.length;
+        }
+        
+        // Form validation
+        document.getElementById('declarationForm').addEventListener('submit', function(e) {
+            const requiredFields = document.querySelectorAll('.required');
+            let isValid = true;
+            
+            // Check declaration checkbox
+            const declarationCheckbox = document.getElementById('declaration_checkbox');
+            if (!declarationCheckbox.checked) {
+                isValid = false;
+                const declarationBox = document.querySelector('.declaration-box');
+                declarationBox.style.borderColor = '#e74c3c';
+                declarationBox.style.background = '#fef2f2';
+                
+                const error = document.createElement('div');
+                error.className = 'error-message';
+                error.style.color = '#e74c3c';
+                error.style.fontSize = '14px';
+                error.style.marginTop = '10px';
+                error.textContent = 'You must accept the declaration to submit your application.';
+                declarationBox.appendChild(error);
+            } else {
+                const declarationBox = document.querySelector('.declaration-box');
+                declarationBox.style.borderColor = '#bbf7d0';
+                declarationBox.style.background = '#f0fdf4';
+                
+                // Remove any existing error messages
+                const errors = declarationBox.querySelectorAll('.error-message');
+                errors.forEach(error => error.remove());
+            }
+            
+            // Check referee fields
+            requiredFields.forEach(field => {
+                const input = field.closest('.form-group').querySelector('input, select, textarea');
+                if (!input || !input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = '#e74c3c';
+                    
+                    // Add error message if not exists
+                    if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('error-message')) {
+                        const error = document.createElement('div');
+                        error.className = 'error-message';
+                        error.style.color = '#e74c3c';
+                        error.style.fontSize = '12px';
+                        error.style.marginTop = '4px';
+                        error.textContent = 'This field is required';
+                        input.parentNode.appendChild(error);
+                    }
+                } else {
+                    input.style.borderColor = '#e0e6ed';
+                    // Remove error message if exists
+                    const error = input.parentNode.querySelector('.error-message');
+                    if (error) {
+                        error.remove();
+                    }
+                    
+                    // Phone validation for contact numbers
+                    if (input.id.includes('ref_contact') && input.value) {
+                        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                        const digitsOnly = input.value.replace(/\D/g, '');
+                        if (!phoneRegex.test(digitsOnly) || digitsOnly.length < 10) {
+                            isValid = false;
+                            input.style.borderColor = '#e74c3c';
+                            const error = document.createElement('div');
+                            error.className = 'error-message';
+                            error.style.color = '#e74c3c';
+                            error.style.fontSize = '12px';
+                            error.style.marginTop = '4px';
+                            error.textContent = 'Please enter a valid phone number (minimum 10 digits)';
+                            input.parentNode.appendChild(error);
+                        }
+                    }
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please complete all required fields and accept the declaration before submitting.');
+            } else {
+                // Confirmation before final submission
+                const confirmSubmit = confirm('Are you sure you want to submit your application? Please verify all information before final submission.');
+                if (!confirmSubmit) {
+                    e.preventDefault();
+                } else {
+                    // Show loading state
+                    const submitBtn = document.querySelector('.btn-submit');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+                    submitBtn.disabled = true;
+                    
+                    // You could add AJAX submission here if needed
+                }
+            }
+        });
+        
+        // Phone number formatting
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+            phoneInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 0) {
+                        value = value.match(/(\d{0,3})(\d{0,3})(\d{0,4})/).slice(1).join('-');
+                        e.target.value = value.replace(/-+$/, '');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
