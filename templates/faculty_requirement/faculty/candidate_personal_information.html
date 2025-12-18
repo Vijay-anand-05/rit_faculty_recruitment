@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Candidate Personal Information</title>
+</head>
+<body>
+
+<h2>Candidate Personal Information</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Full Name</label><br>
+    <input type="text" name="full_name" value="{{ data.full_name }}" required><br><br>
+
+    <label>Date of Birth</label><br>
+    <input type="date" name="date_of_birth" value="{{ data.date_of_birth }}" required><br><br>
+
+    <label>Age</label><br>
+    <input type="number" name="age" value="{{ data.age }}" required><br><br>
+
+    <label>Gender</label><br>
+    <input type="text" name="gender" value="{{ data.gender }}" required><br><br>
+
+    <label>Marital Status</label><br>
+    <input type="text" name="marital_status" value="{{ data.marital_status }}"><br><br>
+
+    <label>Community</label><br>
+    <input type="text" name="community" value="{{ data.community }}"><br><br>
+
+    <label>Caste</label><br>
+    <input type="text" name="caste" value="{{ data.caste }}"><br><br>
+
+    <label>PAN Number</label><br>
+    <input type="text" name="pan_number" value="{{ data.pan_number }}"><br><br>
+
+    <label>Email</label><br>
+    <input type="email" name="email" value="{{ data.email }}" required><br><br>
+
+    <label>Primary Contact</label><br>
+    <input type="text" name="phone_primary" value="{{ data.phone_primary }}" required><br><br>
+
+    <label>Secondary Contact</label><br>
+    <input type="text" name="phone_secondary" value="{{ data.phone_secondary }}"><br><br>
+
+    <label>Residential Address</label><br>
+    <textarea name="address" rows="4">{{ data.address }}</textarea><br><br>
+
+    <button type="submit">Next</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Academic Experience</title>
+</head>
+<body>
+
+<h2>Academic Experience</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Institution</label><br>
+    <input name="institution"><br><br>
+
+    <label>Designation</label><br>
+    <input name="designation"><br><br>
+
+    <label>From Date</label><br>
+    <input type="date" name="from_date"><br><br>
+
+    <label>To Date</label><br>
+    <input type="date" name="to_date"><br><br>
+
+    <label>Years</label><br>
+    <input name="years"><br>
+
+    <label>Months</label><br>
+    <input name="months"><br>
+
+    <label>Days</label><br>
+    <input name="days"><br><br>
+
+    <a href="{% url 'educational_qualifications' %}">Previous</a>
+    <button type="submit">Next</button>
+</form>
+
+</body>
+</html>

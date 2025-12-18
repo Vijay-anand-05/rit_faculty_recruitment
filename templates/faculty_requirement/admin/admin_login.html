@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+</head>
+<body>
+<h2>Admin Login</h2>
+
+{% for message in messages %}
+    <p style="color:red;">{{ message }}</p>
+{% endfor %}
+
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Username" required><br><br>
+    <input type="password" name="password" placeholder="Password" required><br><br>
+    <button type="submit">Login</button>
+</form>
+</body>
+</html>

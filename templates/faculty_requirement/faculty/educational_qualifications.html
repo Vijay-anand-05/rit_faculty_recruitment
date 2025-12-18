@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Educational Qualifications</title>
+</head>
+<body>
+
+<h2>Educational Qualifications</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <!-- Repeat block manually for each qualification -->
+    <fieldset>
+        <legend>Qualification</legend>
+
+        <label>Degree Level</label><br>
+        <input name="degree_level"><br>
+
+        <label>Degree Name</label><br>
+        <input name="degree_name"><br>
+
+        <label>Specialization</label><br>
+        <input name="specialization"><br>
+
+        <label>Institution</label><br>
+        <input name="institution"><br>
+
+        <label>University</label><br>
+        <input name="university"><br>
+
+        <label>Year of Passing</label><br>
+        <input name="year_of_passing"><br>
+
+        <label>Percentage / Grade</label><br>
+        <input name="percentage"><br>
+
+        <label>Class Obtained</label><br>
+        <input name="class_obtained"><br>
+
+        <label>Mode of Study</label><br>
+        <input name="mode_of_study"><br>
+
+        <label>No. of Arrears</label><br>
+        <input name="arrears"><br>
+    </fieldset>
+
+    <br>
+    <a href="{% url 'position_and_employment' %}">Previous</a>
+    <button type="submit">Next</button>
+</form>
+
+</body>
+</html>

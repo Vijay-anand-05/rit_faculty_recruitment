@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Referees</title>
+</head>
+<body>
+
+<h2>Referees</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Name</label><br>
+    <input name="name"><br><br>
+
+    <label>Designation</label><br>
+    <input name="designation"><br><br>
+
+    <label>Organization</label><br>
+    <input name="organization"><br><br>
+
+    <label>Contact Number</label><br>
+    <input name="contact_number"><br><br>
+
+    <a href="{% url 'contributions_and_events' %}">Previous</a>
+    <button type="submit">Next</button>
+</form>
+
+</body>
+</html>
