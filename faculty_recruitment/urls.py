@@ -19,6 +19,9 @@ from django.contrib import admin
 from django.urls import path, include
 from applications.urls import main_fr_urls
 from applications.views import admin_views
+from faculty_recruitment import settings
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # path("admin/", admin.site.urls),
@@ -26,3 +29,6 @@ urlpatterns = [
     # path("", include("faculty_recruitment.urls")),
     path("", include(main_fr_urls)),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

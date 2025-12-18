@@ -1,74 +1,61 @@
-from django.urls import path, include
-from applications.urls import main_fr_urls
-from applications.views import main_fr_views, application_form_views
+from django.urls import path
+from applications.views import application_form_views as views
 
 urlpatterns = [
-   path("", main_fr_views.index, name="index"),
 
-
-   path(
-        "candidate-personal-information/",
-        application_form_views.candidate_personal_information,
-        name="candidate_personal_information"
-    ),
-
+    # PAGE 1 — A. INDIVIDUAL SUMMARY SHEET
     path(
-        "position-and-employment/",
-        application_form_views.position_and_employment,
-        name="position_and_employment"
+        "individual-summary-sheet/",
+        views.individual_summary_sheet,
+        name="individual_summary_sheet"
     ),
 
+    # PAGE 2 — B. INDIVIDUAL DATA SHEET
+    path(
+        "individual-data-sheet/",
+        views.individual_data_sheet,
+        name="individual_data_sheet"
+    ),
+
+    # PAGE 3 — EDUCATION + THESIS
     path(
         "educational-qualifications/",
-        application_form_views.educational_qualifications,
+        views.educational_qualifications,
         name="educational_qualifications"
     ),
 
+    # PAGE 4 — ACADEMIC + INDUSTRY EXPERIENCE
     path(
-        "academic-experience/",
-        application_form_views.academic_experience,
-        name="academic_experience"
+        "academic-and-industry-experience/",
+        views.academic_and_industry_experience,
+        name="academic_and_industry_experience"
     ),
 
+    # PAGE 5 — TEACHING + CONTRIBUTIONS
     path(
-        "industry-and-research-experience/",
-        application_form_views.industry_experience,
-        name="industry_experience"
+        "teaching-and-contributions/",
+        views.teaching_and_contributions,
+        name="teaching_and_contributions"
     ),
 
+    # PAGE 6 — PROGRAMMES + PUBLICATIONS
     path(
-        "teaching-experience/",
-        application_form_views.teaching_experience,
-        name="teaching_experience"
+        "programmes-and-publications/",
+        views.programmes_and_publications,
+        name="programmes_and_publications"
     ),
 
+    # PAGE 7 — REFEREES + FINAL SUBMIT
     path(
-        "research-publications/",
-        application_form_views.research_publications,
-        name="research_publications"
+        "referees-and-declaration/",
+        views.referees_and_declaration,
+        name="referees_and_declaration"
     ),
 
+    # SUCCESS PAGE
     path(
-        "contributions-and-events/",
-        application_form_views.contributions_and_events,
-        name="contributions_and_events"
-    ),
-
-    path(
-        "referees/",
-        application_form_views.referees,
-        name="referees"
-    ),
-
-    path(
-        "final-declaration-and-submit/",
-        application_form_views.final_declaration_and_submit,
-        name="final_declaration_and_submit"
-    ),
-
-    path(
-        "application-submitted/",
-        application_form_views.application_success,
+        "application-success/",
+        views.application_success,
         name="application_success"
     ),
 ]

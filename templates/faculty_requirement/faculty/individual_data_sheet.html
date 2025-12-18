@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individual Data Sheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: #3498db;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #a0aec0;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-prev {
+            background: #64748b;
+            color: white;
+        }
+
+        .btn-prev:hover {
+            background: #475569;
+        }
+
+        .btn-next {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #2980b9;
+        }
+
+        .icon {
+            font-size: 16px;
+        }
+
+        .required:after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        .instructions {
+            background: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .instructions p {
+            margin-bottom: 5px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .header, .form-section {
+                padding: 25px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Individual Data Sheet</h1>
+            <p>Please provide your personal and contact information</p>
+        </div>
+
+        <!-- Main Form -->
+        <div class="form-section">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Instructions -->
+                <div class="instructions">
+                    <p><strong>Instructions:</strong> Fill in all required personal details accurately. Fields marked with * are mandatory.</p>
+                </div>
+
+                <!-- Personal Information -->
+                <h2 class="section-title">Personal Information</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name" class="required">Full Name</label>
+                        <input type="text" 
+                               name="name" 
+                               id="name" 
+                               class="form-control" 
+                               placeholder="Enter your full name"
+                               value="{{ data.name|default:'' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date_of_birth" class="required">Date of Birth</label>
+                        <input type="date" 
+                               name="date_of_birth" 
+                               id="date_of_birth" 
+                               class="form-control"
+                               value="{{ data.date_of_birth|default:'' }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender" class="required">Gender</label>
+                        <select name="gender" id="gender" class="form-control">
+                            <option value="">Select Gender</option>
+                            <option value="Male" {% if data.gender == "Male" %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if data.gender == "Female" %}selected{% endif %}>Female</option>
+                            <option value="Other" {% if data.gender == "Other" %}selected{% endif %}>Other</option>
+                            <option value="Prefer not to say" {% if data.gender == "Prefer not to say" %}selected{% endif %}>Prefer not to say</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="marital_status">Marital Status</label>
+                        <select name="marital_status" id="marital_status" class="form-control">
+                            <option value="">Select Status</option>
+                            <option value="Single" {% if data.marital_status == "Single" %}selected{% endif %}>Single</option>
+                            <option value="Married" {% if data.marital_status == "Married" %}selected{% endif %}>Married</option>
+                            <option value="Divorced" {% if data.marital_status == "Divorced" %}selected{% endif %}>Divorced</option>
+                            <option value="Widowed" {% if data.marital_status == "Widowed" %}selected{% endif %}>Widowed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Current Position -->
+                <h2 class="section-title">Current Position</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="present_designation" class="required">Present Designation</label>
+                        <input type="text" 
+                               name="present_designation" 
+                               id="present_designation" 
+                               class="form-control" 
+                               placeholder="e.g., Assistant Professor"
+                               value="{{ data.present_designation|default:'' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="present_organization" class="required">Organization</label>
+                        <input type="text" 
+                               name="present_organization" 
+                               id="present_organization" 
+                               class="form-control" 
+                               placeholder="e.g., University of California"
+                               value="{{ data.present_organization|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <h2 class="section-title">Contact Information</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone_primary" class="required">Primary Phone</label>
+                        <input type="tel" 
+                               name="phone_primary" 
+                               id="phone_primary" 
+                               class="form-control" 
+                               placeholder="e.g., +1 (555) 123-4567"
+                               value="{{ data.phone_primary|default:'' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone_secondary">Secondary Phone</label>
+                        <input type="tel" 
+                               name="phone_secondary" 
+                               id="phone_secondary" 
+                               class="form-control" 
+                               placeholder="Optional"
+                               value="{{ data.phone_secondary|default:'' }}">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="email" class="required">Email Address</label>
+                        <input type="email" 
+                               name="email" 
+                               id="email" 
+                               class="form-control" 
+                               placeholder="your.email@example.com"
+                               value="{{ data.email|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="address" class="required">Residential Address</label>
+                        <textarea name="address" 
+                                  id="address" 
+                                  class="form-control" 
+                                  placeholder="Enter your complete residential address">{{ data.address|default:'' }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Community & Identification -->
+                <h2 class="section-title">Community & Identification</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="community">Community</label>
+                        <select name="community" id="community" class="form-control">
+                            <option value="">Select Community</option>
+                            <option value="General" {% if data.community == "General" %}selected{% endif %}>General</option>
+                            <option value="OBC" {% if data.community == "OBC" %}selected{% endif %}>OBC</option>
+                            <option value="SC" {% if data.community == "SC" %}selected{% endif %}>SC</option>
+                            <option value="ST" {% if data.community == "ST" %}selected{% endif %}>ST</option>
+                            <option value="Other" {% if data.community == "Other" %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caste">Caste (if applicable)</label>
+                        <input type="text" 
+                               name="caste" 
+                               id="caste" 
+                               class="form-control" 
+                               placeholder="Enter caste"
+                               value="{{ data.caste|default:'' }}">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pan_number">PAN Number</label>
+                        <input type="text" 
+                               name="pan_number" 
+                               id="pan_number" 
+                               class="form-control" 
+                               placeholder="e.g., ABCDE1234F"
+                               value="{{ data.pan_number|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <h2 class="section-title">Professional Experience</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="total_experience_years" class="required">Total Experience (Years)</label>
+                        <input type="number" 
+                               name="total_experience_years" 
+                               id="total_experience_years" 
+                               class="form-control" 
+                               placeholder="Total years"
+                               min="0" max="50"
+                               value="{{ data.total_experience_years|default:'' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="present_post_years">Experience in Present Post (Years)</label>
+                        <input type="number" 
+                               name="present_post_years" 
+                               id="present_post_years" 
+                               class="form-control" 
+                               placeholder="Years in current position"
+                               min="0" max="50"
+                               value="{{ data.present_post_years|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- Family Information -->
+                <h2 class="section-title">Family Information</h2>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="mother_name_and_occupation">Mother's Name & Occupation</label>
+                        <input type="text" 
+                               name="mother_name_and_occupation" 
+                               id="mother_name_and_occupation" 
+                               class="form-control" 
+                               placeholder="e.g., Jane Doe - Teacher"
+                               value="{{ data.mother_name_and_occupation|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="button-group">
+                    <button type="button" class="btn btn-prev" onclick="window.location.href='{% url 'individual_summary_sheet' %}'">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button type="submit" class="btn btn-next">
+                        Save & Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Set default date for date of birth (minimum 18 years old)
+        document.addEventListener('DOMContentLoaded', function() {
+            const dobInput = document.getElementById('date_of_birth');
+            if (!dobInput.value) {
+                // Calculate date 18 years ago
+                const today = new Date();
+                const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+                const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                
+                dobInput.min = minDate.toISOString().split('T')[0];
+                dobInput.max = maxDate.toISOString().split('T')[0];
+            }
+            
+            // Phone number formatting
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+            phoneInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 0) {
+                        value = value.match(/(\d{0,3})(\d{0,3})(\d{0,4})/).slice(1).join('-');
+                        e.target.value = value.replace(/-+$/, '');
+                    }
+                });
+            });
+        });
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const requiredFields = document.querySelectorAll('.required');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                const input = field.closest('.form-group').querySelector('input, select, textarea');
+                if (!input || !input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = '#e74c3c';
+                    
+                    // Add error message if not exists
+                    if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('error-message')) {
+                        const error = document.createElement('div');
+                        error.className = 'error-message';
+                        error.style.color = '#e74c3c';
+                        error.style.fontSize = '12px';
+                        error.style.marginTop = '4px';
+                        error.textContent = 'This field is required';
+                        input.parentNode.appendChild(error);
+                    }
+                } else {
+                    input.style.borderColor = '#e0e6ed';
+                    // Remove error message if exists
+                    const error = input.parentNode.querySelector('.error-message');
+                    if (error) {
+                        error.remove();
+                    }
+                    
+                    // Email validation
+                    if (input.type === 'email' && input.value) {
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(input.value)) {
+                            isValid = false;
+                            input.style.borderColor = '#e74c3c';
+                            const error = document.createElement('div');
+                            error.className = 'error-message';
+                            error.style.color = '#e74c3c';
+                            error.style.fontSize = '12px';
+                            error.style.marginTop = '4px';
+                            error.textContent = 'Please enter a valid email address';
+                            input.parentNode.appendChild(error);
+                        }
+                    }
+                    
+                    // Date validation
+                    if (input.type === 'date' && input.value) {
+                        const selectedDate = new Date(input.value);
+                        const today = new Date();
+                        const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+                        const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+                        
+                        if (selectedDate < minDate || selectedDate > maxDate) {
+                            isValid = false;
+                            input.style.borderColor = '#e74c3c';
+                            const error = document.createElement('div');
+                            error.className = 'error-message';
+                            error.style.color = '#e74c3c';
+                            error.style.fontSize = '12px';
+                            error.style.marginTop = '4px';
+                            error.textContent = 'Age must be between 18 and 100 years';
+                            input.parentNode.appendChild(error);
+                        }
+                    }
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill all required fields marked with * and ensure they are valid.');
+            }
+        });
+    </script>
+</body>
+</html>
