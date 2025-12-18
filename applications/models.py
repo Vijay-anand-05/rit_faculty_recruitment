@@ -1,5 +1,11 @@
 from django.db import models
 
+from django.db import models
+from django.contrib.auth.models import User
+
+
+
+
 class Candidate(models.Model):
     full_name = models.CharField(max_length=200)
     date_of_birth = models.DateField()
@@ -175,4 +181,66 @@ class Document(models.Model):
     document_type = models.CharField(max_length=100)
     file = models.FileField(upload_to="candidate_documents/")
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
+
+
+class AdminLoginLog(models.Model):
+    ACTION_CHOICES = (
+        ("LOGIN_SUCCESS", "Login Success"),
+        ("LOGIN_FAILED", "Login Failed"),
+        ("LOGOUT", "Logout"),
+    )
+
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    username_attempted = models.CharField(max_length=150, blank=True)
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES)
+
+    ip_address = models.GenericIPAddressField()
+    user_agent = models.TextField()
+
+    session_key = models.CharField(max_length=40, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-timestamp"]
+        verbose_name = "Admin Login Log"
+        verbose_name_plural = "Admin Login Logs"
+
+    def __str__(self):
+        return f"{self.username_attempted} - {self.action} - {self.timestamp}"
+
+class VisitorLog(models.Model):
+    user = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL
+    )
+    ip_address = models.GenericIPAddressField()
+    user_agent = models.TextField()
+    device_type = models.CharField(max_length=50)
+    path = models.CharField(max_length=500)
+    method = models.CharField(max_length=10)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["ip_address"]),
+            models.Index(fields=["timestamp"]),
+        ]
+
+class ApplicationUsageLog(models.Model):
+    ACTION_CHOICES = [
+        ("FORM_SUBMITTED", "Form Submitted"),
+    ]
+
+    candidate = models.ForeignKey(
+        Candidate, on_delete=models.CASCADE, related_name="usage_logs"
+    )
+
+    ip_address = models.GenericIPAddressField()
+    user_agent = models.TextField()
+    device_type = models.CharField(max_length=50)
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+
+    timestamp = models.DateTimeField(auto_now_add=True)
+
 

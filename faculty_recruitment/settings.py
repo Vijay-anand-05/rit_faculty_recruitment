@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-sn8)$*#j$za8xc=n-3g^nyej@pjqut=%g_u+v-#q(gz7&b7@57
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "axes",
     "applications",
 ]
 
@@ -48,9 +49,19 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
+    'axes.middleware.AxesMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',  # ✅ Axes first
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
 ROOT_URLCONF = "faculty_recruitment.urls"
+
+MIDDLEWARE.insert(0, "applications.middleware.VisitorLoggingMiddleware")
 
 # TEMPLATES = [
 #     {
@@ -66,6 +77,18 @@ ROOT_URLCONF = "faculty_recruitment.urls"
 #         },
 #     },
 # ]
+
+
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = True
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 TEMPLATES = [
@@ -159,3 +182,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+
+

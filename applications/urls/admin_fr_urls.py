@@ -8,4 +8,6 @@ urlpatterns = [
    path("admin-logout/", admin_views.admin_logout, name="admin_logout"),
 
    path("admin-home/", main_fr_views.admin_home, name="admin_home"),
+   path("logs/", admin_views.logs, name="logs"),
+   path("logs/admin-logs/", admin_views.admin_logs, name="admin_logs"),
 ]
