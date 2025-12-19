@@ -1,6 +1,3 @@
-{% load faculty_tags %}
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,536 +40,168 @@ label{display:block;margin-bottom:5px;color:#003366;font-weight:500;font-size:14
 <p>Subjects taught and institutional contributions</p>
 </div>
 
-        <!-- Main Form -->
-        <div class="form-section">
-            <form method="post">
-                {% csrf_token %}
-                
-                <!-- Instructions -->
-                <div class="instructions">
-                    <p><strong>Instructions:</strong> List all subjects taught at UG and PG levels, and describe your contributions to department and college activities.</p>
-                    <p>Use "Add More" buttons to add multiple entries for each section.</p>
-                </div>
+<div class="form-section">
+<form method="post">
+{% csrf_token %}
 
-                <!-- UG Subjects Section -->
-                <h2 class="sub-section-title">
-                    <i class="fas fa-graduation-cap icon" style="color: #3498db; margin-right: 8px;"></i>
-                    Undergraduate (UG) Subjects Taught
-                </h2>
-                
-                <div id="ug-container">
-                    {% if subjects %}
-                        {% for s in subjects %}
-                            {% if s.level == "UG" %}
-                            <div class="subject-block ug" data-index="{{ forloop.counter }}">
-                                <div class="form-group">
-                                    <label for="ug_subject_{{ forloop.counter }}" class="required">Subject & Result</label>
-                                    <input type="text" 
-                                           name="ug_subjects[]" 
-                                           id="ug_subject_{{ forloop.counter }}" 
-                                           class="form-control" 
-                                           placeholder="e.g., Data Structures – 85% pass rate"
-                                           value="{{ s.subject_and_result }}">
-                                </div>
-                                
-                                {% if not forloop.first %}
-                                <button type="button" class="remove-btn" onclick="removeUG(this)">
-                                    <i class="fas fa-trash-alt"></i> Remove UG Subject
-                                </button>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                        
-                        {% if not subjects|selectattr:"level", "equalto", "UG" %}
-                        <div class="subject-block ug" data-index="1">
-                            <div class="form-group">
-                                <label for="ug_subject_1" class="required">Subject & Result</label>
-                                <input type="text" 
-                                       name="ug_subjects[]" 
-                                       id="ug_subject_1" 
-                                       class="form-control" 
-                                       placeholder="e.g., Data Structures – 85% pass rate">
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="subject-block ug" data-index="1">
-                            <div class="form-group">
-                                <label for="ug_subject_1" class="required">Subject & Result</label>
-                                <input type="text" 
-                                       name="ug_subjects[]" 
-                                       id="ug_subject_1" 
-                                       class="form-control" 
-                                       placeholder="e.g., Data Structures – 85% pass rate">
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <button type="button" class="btn btn-add" onclick="addUG()">
-                    <i class="fas fa-plus-circle"></i> Add More UG Subject
-                </button>
-
-                <!-- PG Subjects Section -->
-                <h2 class="sub-section-title">
-                    <i class="fas fa-user-graduate icon" style="color: #f59e0b; margin-right: 8px;"></i>
-                    Postgraduate (PG) Subjects Taught
-                </h2>
-                
-                <div id="pg-container">
-                    {% if subjects %}
-                        {% for s in subjects %}
-                            {% if s.level == "PG" %}
-                            <div class="subject-block pg" data-index="{{ forloop.counter }}">
-                                <div class="form-group">
-                                    <label for="pg_subject_{{ forloop.counter }}" class="required">Subject & Result</label>
-                                    <input type="text" 
-                                           name="pg_subjects[]" 
-                                           id="pg_subject_{{ forloop.counter }}" 
-                                           class="form-control" 
-                                           placeholder="e.g., Advanced Algorithms – 90% pass rate"
-                                           value="{{ s.subject_and_result }}">
-                                </div>
-                                
-                                {% if not forloop.first %}
-                                <button type="button" class="remove-btn" onclick="removePG(this)">
-                                    <i class="fas fa-trash-alt"></i> Remove PG Subject
-                                </button>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                        
-                        {% if not subjects|selectattr:"level", "equalto", "PG" %}
-                        <div class="subject-block pg" data-index="1">
-                            <div class="form-group">
-                                <label for="pg_subject_1" class="required">Subject & Result</label>
-                                <input type="text" 
-                                       name="pg_subjects[]" 
-                                       id="pg_subject_1" 
-                                       class="form-control" 
-                                       placeholder="e.g., Advanced Algorithms – 90% pass rate">
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="subject-block pg" data-index="1">
-                            <div class="form-group">
-                                <label for="pg_subject_1" class="required">Subject & Result</label>
-                                <input type="text" 
-                                       name="pg_subjects[]" 
-                                       id="pg_subject_1" 
-                                       class="form-control" 
-                                       placeholder="e.g., Advanced Algorithms – 90% pass rate">
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <button type="button" class="btn btn-add" onclick="addPG()">
-                    <i class="fas fa-plus-circle"></i> Add More PG Subject
-                </button>
-
-                <!-- Section Divider -->
-                <div class="section-divider"></div>
-
-                <!-- Contributions Section -->
-                <h2 class="section-title">Institutional Contributions</h2>
-                
-                <!-- Department Contributions -->
-                <h2 class="sub-section-title">
-                    <i class="fas fa-building icon" style="color: #10b981; margin-right: 8px;"></i>
-                    Department Contributions
-                </h2>
-                
-                <div id="dept-container">
-                    {% if contributions %}
-                        {% for c in contributions %}
-                            {% if c.level == "Department" %}
-                            <div class="contribution-block department">
-                                <div class="form-group">
-                                    <label for="dept_contribution_{{ forloop.counter }}">Contribution</label>
-                                    <textarea name="department_contributions[]" 
-                                              id="dept_contribution_{{ forloop.counter }}" 
-                                              class="form-control" 
-                                              placeholder="e.g., Organized department seminar series, Curriculum development committee member">{{ c.description }}</textarea>
-                                </div>
-                                
-                                {% if not forloop.first %}
-                                <button type="button" class="remove-btn" onclick="removeDeptContribution(this)">
-                                    <i class="fas fa-trash-alt"></i> Remove Contribution
-                                </button>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                        
-                        {% if not contributions|selectattr:"level", "equalto", "Department" %}
-                        <div class="contribution-block department">
-                            <div class="form-group">
-                                <label for="dept_contribution_1">Contribution</label>
-                                <textarea name="department_contributions[]" 
-                                          id="dept_contribution_1" 
-                                          class="form-control" 
-                                          placeholder="e.g., Organized department seminar series, Curriculum development committee member"></textarea>
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="contribution-block department">
-                            <div class="form-group">
-                                <label for="dept_contribution_1">Contribution</label>
-                                <textarea name="department_contributions[]" 
-                                          id="dept_contribution_1" 
-                                          class="form-control" 
-                                          placeholder="e.g., Organized department seminar series, Curriculum development committee member"></textarea>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <button type="button" class="btn btn-add" onclick="addDeptContribution()">
-                    <i class="fas fa-plus-circle"></i> Add More Department Contribution
-                </button>
-
-                <!-- College Contributions -->
-                <h2 class="sub-section-title">
-                    <i class="fas fa-university icon" style="color: #8b5cf6; margin-right: 8px;"></i>
-                    College Contributions
-                </h2>
-                
-                <div id="college-container">
-                    {% if contributions %}
-                        {% for c in contributions %}
-                            {% if c.level == "College" %}
-                            <div class="contribution-block college">
-                                <div class="form-group">
-                                    <label for="college_contribution_{{ forloop.counter }}">Contribution</label>
-                                    <textarea name="college_contributions[]" 
-                                              id="college_contribution_{{ forloop.counter }}" 
-                                              class="form-control" 
-                                              placeholder="e.g., Member of college academic council, Organized college cultural fest">{{ c.description }}</textarea>
-                                </div>
-                                
-                                {% if not forloop.first %}
-                                <button type="button" class="remove-btn" onclick="removeCollegeContribution(this)">
-                                    <i class="fas fa-trash-alt"></i> Remove Contribution
-                                </button>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                        
-                        {% if not contributions|selectattr:"level", "equalto", "College" %}
-                        <div class="contribution-block college">
-                            <div class="form-group">
-                                <label for="college_contribution_1">Contribution</label>
-                                <textarea name="college_contributions[]" 
-                                          id="college_contribution_1" 
-                                          class="form-control" 
-                                          placeholder="e.g., Member of college academic council, Organized college cultural fest"></textarea>
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="contribution-block college">
-                            <div class="form-group">
-                                <label for="college_contribution_1">Contribution</label>
-                                <textarea name="college_contributions[]" 
-                                          id="college_contribution_1" 
-                                          class="form-control" 
-                                          placeholder="e.g., Member of college academic council, Organized college cultural fest"></textarea>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <button type="button" class="btn btn-add" onclick="addCollegeContribution()">
-                    <i class="fas fa-plus-circle"></i> Add More College Contribution
-                </button>
-
-                <!-- Navigation Buttons -->
-                <div class="button-group">
-                    <button type="button" class="btn btn-prev" onclick="window.location.href='{% url 'academic_and_industry_experience' %}'">
-                        <i class="fas fa-arrow-left"></i> Previous
-                    </button>
-                    <button type="submit" class="btn btn-next">
-                        Save & Next <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </form>
+<!-- ================= UG ================= -->
+<h2 class="sub-section-title">Undergraduate (UG)</h2>
+<div id="ug-container" class="block-container">
+{% if subjects %}
+    {% for s in subjects %}
+        {% if s.level == "UG" %}
+        <div class="subject-block ug-block" data-index="{{ forloop.counter }}">
+            <label class="required">Subject & Result</label>
+            <input type="text" name="ug_subjects[]" class="form-control"
+                   value="{{ s.subject_and_result }}">
+            {% if not forloop.first %}
+            <button type="button" class="remove-btn" onclick="removeBlock(this)">Remove</button>
+            {% endif %}
         </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="subject-block ug-block" data-index="1">
+        <label class="required">Subject & Result</label>
+        <input type="text" name="ug_subjects[]" class="form-control">
     </div>
+{% endif %}
+</div>
 
-    <script>
-        let ugCounter = {{ subjects|selectattr:"level", "equalto", "UG"|list|length|default:1 }};
-        let pgCounter = {{ subjects|selectattr:"level", "equalto", "PG"|list|length|default:1 }};
-        let deptCounter = {{ contributions|selectattr:"level", "equalto", "Department"|list|length|default:1 }};
-        let collegeCounter = {{ contributions|selectattr:"level", "equalto", "College"|list|length|default:1 }};
-        
-        function addUG() {
-            ugCounter++;
-            const container = document.getElementById('ug-container');
-            const firstBlock = container.querySelector('.subject-block.ug');
-            const newBlock = firstBlock.cloneNode(true);
-            
-            // Update index number
-            newBlock.setAttribute('data-index', ugCounter);
-            
-            // Clear input value
-            newBlock.querySelector('input').value = '';
-            
-            // Update ID to be unique
-            const input = newBlock.querySelector('input');
-            const oldId = input.id;
-            if (oldId) {
-                const baseId = oldId.replace(/\d+$/, '');
-                input.id = baseId + '_' + ugCounter;
-                
-                // Update label for attribute
-                const label = newBlock.querySelector('label');
-                if (label) {
-                    label.setAttribute('for', input.id);
-                }
-            }
-            
-            // Add remove button if not present
-            if (!newBlock.querySelector('.remove-btn')) {
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove UG Subject';
-                removeBtn.onclick = function() { removeUG(this); };
-                newBlock.appendChild(removeBtn);
-            }
-            
-            container.appendChild(newBlock);
-            newBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function removeUG(button) {
-            const block = button.closest('.subject-block.ug');
-            if (document.querySelectorAll('.subject-block.ug').length > 1) {
-                block.remove();
-                updateUGIndices();
-            } else {
-                alert('You must have at least one UG subject entry.');
-            }
-        }
-        
-        function addPG() {
-            pgCounter++;
-            const container = document.getElementById('pg-container');
-            const firstBlock = container.querySelector('.subject-block.pg');
-            const newBlock = firstBlock.cloneNode(true);
-            
-            // Update index number
-            newBlock.setAttribute('data-index', pgCounter);
-            
-            // Clear input value
-            newBlock.querySelector('input').value = '';
-            
-            // Update ID to be unique
-            const input = newBlock.querySelector('input');
-            const oldId = input.id;
-            if (oldId) {
-                const baseId = oldId.replace(/\d+$/, '');
-                input.id = baseId + '_' + pgCounter;
-                
-                // Update label for attribute
-                const label = newBlock.querySelector('label');
-                if (label) {
-                    label.setAttribute('for', input.id);
-                }
-            }
-            
-            // Add remove button if not present
-            if (!newBlock.querySelector('.remove-btn')) {
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove PG Subject';
-                removeBtn.onclick = function() { removePG(this); };
-                newBlock.appendChild(removeBtn);
-            }
-            
-            container.appendChild(newBlock);
-            newBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function removePG(button) {
-            const block = button.closest('.subject-block.pg');
-            if (document.querySelectorAll('.subject-block.pg').length > 1) {
-                block.remove();
-                updatePGIndices();
-            } else {
-                alert('You must have at least one PG subject entry.');
-            }
-        }
-        
-        function addDeptContribution() {
-            deptCounter++;
-            const container = document.getElementById('dept-container');
-            const firstBlock = container.querySelector('.contribution-block.department');
-            const newBlock = firstBlock.cloneNode(true);
-            
-            // Clear textarea value
-            newBlock.querySelector('textarea').value = '';
-            
-            // Update ID to be unique
-            const textarea = newBlock.querySelector('textarea');
-            const oldId = textarea.id;
-            if (oldId) {
-                const baseId = oldId.replace(/\d+$/, '');
-                textarea.id = baseId + '_' + deptCounter;
-                
-                // Update label for attribute
-                const label = newBlock.querySelector('label');
-                if (label) {
-                    label.setAttribute('for', textarea.id);
-                }
-            }
-            
-            // Add remove button if not present
-            if (!newBlock.querySelector('.remove-btn')) {
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove Contribution';
-                removeBtn.onclick = function() { removeDeptContribution(this); };
-                newBlock.appendChild(removeBtn);
-            }
-            
-            container.appendChild(newBlock);
-            newBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function removeDeptContribution(button) {
-            const block = button.closest('.contribution-block.department');
-            if (document.querySelectorAll('.contribution-block.department').length > 1) {
-                block.remove();
-                deptCounter--;
-            } else {
-                alert('You must have at least one department contribution entry.');
-            }
-        }
-        
-        function addCollegeContribution() {
-            collegeCounter++;
-            const container = document.getElementById('college-container');
-            const firstBlock = container.querySelector('.contribution-block.college');
-            const newBlock = firstBlock.cloneNode(true);
-            
-            // Clear textarea value
-            newBlock.querySelector('textarea').value = '';
-            
-            // Update ID to be unique
-            const textarea = newBlock.querySelector('textarea');
-            const oldId = textarea.id;
-            if (oldId) {
-                const baseId = oldId.replace(/\d+$/, '');
-                textarea.id = baseId + '_' + collegeCounter;
-                
-                // Update label for attribute
-                const label = newBlock.querySelector('label');
-                if (label) {
-                    label.setAttribute('for', textarea.id);
-                }
-            }
-            
-            // Add remove button if not present
-            if (!newBlock.querySelector('.remove-btn')) {
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'remove-btn';
-                removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove Contribution';
-                removeBtn.onclick = function() { removeCollegeContribution(this); };
-                newBlock.appendChild(removeBtn);
-            }
-            
-            container.appendChild(newBlock);
-            newBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function removeCollegeContribution(button) {
-            const block = button.closest('.contribution-block.college');
-            if (document.querySelectorAll('.contribution-block.college').length > 1) {
-                block.remove();
-                collegeCounter--;
-            } else {
-                alert('You must have at least one college contribution entry.');
-            }
-        }
-        
-        function updateUGIndices() {
-            const blocks = document.querySelectorAll('.subject-block.ug');
-            blocks.forEach((block, index) => {
-                block.setAttribute('data-index', index + 1);
-                // Update IDs
-                const input = block.querySelector('input');
-                const label = block.querySelector('label');
-                if (input && label) {
-                    const baseId = 'ug_subject_';
-                    input.id = baseId + (index + 1);
-                    label.setAttribute('for', input.id);
-                }
-            });
-            ugCounter = blocks.length;
-        }
-        
-        function updatePGIndices() {
-            const blocks = document.querySelectorAll('.subject-block.pg');
-            blocks.forEach((block, index) => {
-                block.setAttribute('data-index', index + 1);
-                // Update IDs
-                const input = block.querySelector('input');
-                const label = block.querySelector('label');
-                if (input && label) {
-                    const baseId = 'pg_subject_';
-                    input.id = baseId + (index + 1);
-                    label.setAttribute('for', input.id);
-                }
-            });
-            pgCounter = blocks.length;
-        }
-        
-        // Form validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const requiredFields = document.querySelectorAll('.required');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                const input = field.closest('.form-group').querySelector('input, select, textarea');
-                if (!input || !input.value.trim()) {
-                    isValid = false;
-                    input.style.borderColor = '#e74c3c';
-                    
-                    // Add error message if not exists
-                    if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('error-message')) {
-                        const error = document.createElement('div');
-                        error.className = 'error-message';
-                        error.style.color = '#e74c3c';
-                        error.style.fontSize = '12px';
-                        error.style.marginTop = '4px';
-                        error.textContent = 'This field is required';
-                        input.parentNode.appendChild(error);
-                    }
-                } else {
-                    input.style.borderColor = '#e0e6ed';
-                    // Remove error message if exists
-                    const error = input.parentNode.querySelector('.error-message');
-                    if (error) {
-                        error.remove();
-                    }
-                }
-            });
-            
-            if (!isValid) {
-                e.preventDefault();
-                alert('Please fill all required fields marked with *.');
-            }
-        });
-    </script>
+<button type="button" class="btn btn-add" onclick="addBlock('ug')">+ Add UG Subject</button>
+
+<!-- ================= PG ================= -->
+<h2 class="sub-section-title">Postgraduate (PG)</h2>
+<div id="pg-container" class="block-container">
+{% if subjects %}
+    {% for s in subjects %}
+        {% if s.level == "PG" %}
+        <div class="subject-block pg-block" data-index="{{ forloop.counter }}">
+            <label class="required">Subject & Result</label>
+            <input type="text" name="pg_subjects[]" class="form-control"
+                   value="{{ s.subject_and_result }}">
+            {% if not forloop.first %}
+            <button type="button" class="remove-btn" onclick="removeBlock(this)">Remove</button>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="subject-block pg-block" data-index="1">
+        <label class="required">Subject & Result</label>
+        <input type="text" name="pg_subjects[]" class="form-control">
+    </div>
+{% endif %}
+</div>
+
+<button type="button" class="btn btn-add" onclick="addBlock('pg')">+ Add PG Subject</button>
+
+<!-- ================= CONTRIBUTIONS ================= -->
+<h2 class="section-title">Institutional Contributions</h2>
+
+<h2 class="sub-section-title">Department</h2>
+<div id="dept-container" class="block-container">
+{% if contributions %}
+    {% for c in contributions %}
+        {% if c.level == "Department" %}
+        <div class="contribution-block dept-block">
+            <textarea name="department_contributions[]" class="form-control">{{ c.description }}</textarea>
+            {% if not forloop.first %}
+            <button type="button" class="remove-btn" onclick="removeBlock(this)">Remove</button>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="contribution-block dept-block">
+        <textarea name="department_contributions[]" class="form-control"></textarea>
+    </div>
+{% endif %}
+</div>
+
+<h2 class="sub-section-title">College</h2>
+<div id="college-container" class="block-container">
+{% if contributions %}
+    {% for c in contributions %}
+        {% if c.level == "College" %}
+        <div class="contribution-block college-block">
+            <textarea name="college_contributions[]" class="form-control">{{ c.description }}</textarea>
+            {% if not forloop.first %}
+            <button type="button" class="remove-btn" onclick="removeBlock(this)">Remove</button>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="contribution-block college-block">
+        <textarea name="college_contributions[]" class="form-control"></textarea>
+    </div>
+{% endif %}
+</div>
+
+<div class="button-group">
+<button type="button" class="btn btn-prev"
+onclick="window.location.href='{% url "academic_and_industry_experience" %}'">
+← Previous
+</button>
+<button type="submit" class="btn btn-next">
+Save & Next →
+</button>
+</div>
+
+</form>
+</div>
+</div>
+
+<script>
+// 🔥 HIDE ALL REMOVE BUTTONS ON INITIAL LOAD
+document.querySelectorAll(".remove-btn").forEach(btn => btn.remove());
+
+function addBlock(type){
+    const map={
+        ug:['ug-container','ug-block','input'],
+        pg:['pg-container','pg-block','input'],
+        dept:['dept-container','dept-block','textarea'],
+        college:['college-container','college-block','textarea']
+    };
+
+    const [cid,cls,tag]=map[type];
+    const container=document.getElementById(cid);
+
+    const clone=container.firstElementChild.cloneNode(true);
+    clone.querySelector(tag).value="";
+
+    const oldRemove=clone.querySelector(".remove-btn");
+    if(oldRemove) oldRemove.remove();
+
+    const rb=document.createElement("button");
+    rb.type="button";
+    rb.className="remove-btn";
+    rb.textContent="Remove";
+    rb.onclick=function(){removeBlock(this)};
+    clone.appendChild(rb);
+
+    container.appendChild(clone);
+    updateIndex(container);
+}
+
+function removeBlock(btn){
+    const container=btn.closest(".block-container");
+    btn.parentElement.remove();
+
+    if(container.children.length===1){
+        const rb=container.firstElementChild.querySelector(".remove-btn");
+        if(rb) rb.remove();
+    }
+    updateIndex(container);
+}
+
+function updateIndex(container){
+    [...container.children].forEach((b,i)=>{
+        b.setAttribute("data-index",i+1);
+    });
+}
+</script>
+
 </body>
 </html>
