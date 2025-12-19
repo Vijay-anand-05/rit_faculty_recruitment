@@ -404,6 +404,8 @@ def to_int(value, default=0):
 #     )
 
 def referees_and_declaration(request):
+
+
     # 🔹 VISITOR LOG (GET + POST)
     try:
         VisitorLog.objects.create(
@@ -422,7 +424,11 @@ def referees_and_declaration(request):
     if request.method == "POST":
 
         # -------- CANDIDATE --------
-        personal = request.session["personal"]
+        personal = request.session.get("personal")
+
+        # 🔥 FIX: HARD GUARD
+        if personal is None:
+            return redirect("application_success")
 
         candidate_data = {
             "name": personal.get("name"),
@@ -530,6 +536,9 @@ def referees_and_declaration(request):
         "faculty_requirement/faculty/referees_and_declaration.html",
         {"referees": []},
     )
+
+
+
 
 def application_success(request):
     return render(request, "faculty_requirement/faculty/application_success.html")
