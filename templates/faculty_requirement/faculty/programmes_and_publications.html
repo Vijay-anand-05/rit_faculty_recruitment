@@ -1,711 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programmes & Publications</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programmes & Publications</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(to right, #2c3e50, #4a6491);
-            color: white;
-            padding: 30px 40px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 16px;
-        }
-
-        .form-section {
-            padding: 40px;
-        }
-
-        .section-title {
-            color: #2c3e50;
-            font-size: 22px;
-            font-weight: 600;
-            margin: 30px 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eaeaea;
-            position: relative;
-        }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 80px;
-            height: 2px;
-            background: #3498db;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #2c3e50;
-            font-weight: 500;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: #f8fafc;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #3498db;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .form-control::placeholder {
-            color: #a0aec0;
-        }
-
-        select.form-control {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234a5568' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 16px;
-            padding-right: 40px;
-        }
-
-        .programme-block {
-            background: #f8fafc;
-            border: 2px solid #e0e6ed;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .programme-block:before {
-            content: attr(data-index);
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: #3498db;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .publication-block {
-            background: #fff7ed;
-            border: 2px solid #fed7aa;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .publication-block:before {
-            content: attr(data-index);
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: #f97316;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #eaeaea;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-add {
-            background: #f1f5f9;
-            color: #2c3e50;
-            border: 2px dashed #cbd5e1;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .btn-add:hover {
-            background: #e2e8f0;
-            border-color: #94a3b8;
-        }
-
-        .btn-prev {
-            background: #64748b;
-            color: white;
-        }
-
-        .btn-prev:hover {
-            background: #475569;
-        }
-
-        .btn-next {
-            background: #3498db;
-            color: white;
-        }
-
-        .btn-next:hover {
-            background: #2980b9;
-        }
-
-        .remove-btn {
-            background: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .remove-btn:hover {
-            background: #fecaca;
-        }
-
-        .icon {
-            font-size: 16px;
-        }
-
-        .required:after {
-            content: " *";
-            color: #e74c3c;
-        }
-
-        .instructions {
-            background: #e8f4fc;
-            border-left: 4px solid #3498db;
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #2c3e50;
-        }
-
-        .instructions p {
-            margin-bottom: 5px;
-        }
-
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, #e0e6ed, transparent);
-            margin: 40px 0;
-        }
-
-        .count-input {
-            text-align: center;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .button-group {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            .header, .form-section {
-                padding: 25px;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Calibri','Segoe UI',sans-serif;background:#f8f9fa;padding:20px;color:#333}
+.container{max-width:1000px;margin:auto;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.1);overflow:hidden;border:1px solid #ddd}
+.header{background:#003366;color:#fff;padding:20px;text-align:center;border-bottom:4px solid #ffcc00}
+.header h1{font-size:24px;margin-bottom:5px;font-weight:600}
+.header p{font-size:14px;opacity:.9}
+.form-section{padding:25px}
+.section-title{color:#003366;font-size:18px;font-weight:600;margin:25px 0 15px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}
+label{display:block;margin-bottom:5px;color:#003366;font-weight:500;font-size:14px}
+.required:after{content:" *";color:#d32f2f}
+.form-control,select{width:100%;padding:8px 12px;border:1px solid #ccc;border-radius:4px;font-size:14px}
+.programme-block,.publication-block{background:#f5f7fa;border:1px solid #ddd;border-radius:5px;padding:15px;margin-bottom:15px;position:relative}
+.programme-block:before,.publication-block:before{content:attr(data-index);position:absolute;top:-10px;left:15px;background:#003366;color:#fff;width:20px;height:20px;border-radius:50%;text-align:center;line-height:20px;font-size:12px}
+.publication-block{background:#fff8e1;border-color:#ffd54f}
+.btn{padding:8px 20px;border:none;border-radius:4px;cursor:pointer;font-size:14px}
+.btn-add{background:#e9ecef;color:#003366;border:1px dashed #adb5bd;width:100%;margin:10px 0}
+.btn-prev{background:#6c757d;color:#fff}
+.btn-next{background:#003366;color:#fff}
+.remove-btn{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;padding:5px 10px;border-radius:3px;font-size:12px;cursor:pointer;margin-top:10px}
+.button-group{display:flex;justify-content:space-between;margin-top:30px;padding-top:20px;border-top:1px solid #eee}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Header Section -->
-        <div class="header">
-            <h1>Programmes & Publications</h1>
-            <p>Please provide details of programmes attended/organized and publications</p>
-        </div>
+<div class="container">
+<div class="header">
+<h1>Programmes & Publications</h1>
+<p>Details of programmes attended/organized and publications</p>
+</div>
 
-        <!-- Main Form -->
-        <div class="form-section">
-            <form method="post">
-                {% csrf_token %}
-                
-                <!-- Instructions -->
-                <div class="instructions">
-                    <p><strong>Instructions:</strong> Fill in details of programmes you have participated in or organized, and list your publications.</p>
-                    <p>Use the "Add More" buttons to add multiple entries for each section.</p>
-                </div>
+<div class="form-section">
+<form method="post">
+{% csrf_token %}
 
-                <!-- Programmes Section -->
-                <h2 class="section-title">Programmes Attended/Organized</h2>
-                
-                <div class="form-group">
-                    <label for="programme_category" class="required">Programme Category</label>
-                    <select name="programme_category" id="programme_category" class="form-control">
-                        <option value="">Select Category</option>
-                        <option value="Participated" {% if programmes.0.category == "Participated" %}selected{% endif %}>Participated</option>
-                        <option value="Organized" {% if programmes.0.category == "Organized" %}selected{% endif %}>Organized</option>
-                        <option value="Both" {% if programmes.0.category == "Both" %}selected{% endif %}>Both Participated & Organized</option>
-                    </select>
-                </div>
+<!-- ================= PROGRAMMES ================= -->
+<h2 class="section-title">Programmes</h2>
 
-                <div id="programmes-container">
-                    {% if programmes %}
-                        {% for p in programmes %}
-                            {% if p.programme_type %}
-                            <div class="programme-block" data-index="{{ forloop.counter }}">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label for="programme_type_{{ forloop.counter }}" class="required">Programme Type</label>
-                                        <select name="programme_type[]" id="programme_type_{{ forloop.counter }}" class="form-control">
-                                            <option value="">Select Type</option>
-                                            <option value="Workshop" {% if p.programme_type == "Workshop" %}selected{% endif %}>Workshop</option>
-                                            <option value="FDP" {% if p.programme_type == "FDP" %}selected{% endif %}>Faculty Development Programme (FDP)</option>
-                                            <option value="Conference" {% if p.programme_type == "Conference" %}selected{% endif %}>Conference</option>
-                                            <option value="Seminar" {% if p.programme_type == "Seminar" %}selected{% endif %}>Seminar</option>
-                                            <option value="Symposium" {% if p.programme_type == "Symposium" %}selected{% endif %}>Symposium</option>
-                                            <option value="Webinar" {% if p.programme_type == "Webinar" %}selected{% endif %}>Webinar</option>
-                                            <option value="Training" {% if p.programme_type == "Training" %}selected{% endif %}>Training Program</option>
-                                            <option value="Other" {% if p.programme_type == "Other" %}selected{% endif %}>Other</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="programme_count_{{ forloop.counter }}" class="required">Count</label>
-                                        <input type="number" 
-                                               name="programme_count[]" 
-                                               id="programme_count_{{ forloop.counter }}" 
-                                               class="form-control count-input" 
-                                               placeholder="Number of programmes"
-                                               min="0"
-                                               value="{{ p.count|default:'0' }}">
-                                    </div>
-                                </div>
-                                
-                                {% if not forloop.first %}
-                                <button type="button" class="remove-btn" onclick="removeProgramme(this)">
-                                    <i class="fas fa-trash-alt"></i> Remove Programme
-                                </button>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <!-- Default programme block -->
-                        <div class="programme-block" data-index="1">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="programme_type_1" class="required">Programme Type</label>
-                                    <select name="programme_type[]" id="programme_type_1" class="form-control">
-                                        <option value="">Select Type</option>
-                                        <option value="Workshop">Workshop</option>
-                                        <option value="FDP">Faculty Development Programme (FDP)</option>
-                                        <option value="Conference">Conference</option>
-                                        <option value="Seminar">Seminar</option>
-                                        <option value="Symposium">Symposium</option>
-                                        <option value="Webinar">Webinar</option>
-                                        <option value="Training">Training Program</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="programme_count_1" class="required">Count</label>
-                                    <input type="number" 
-                                           name="programme_count[]" 
-                                           id="programme_count_1" 
-                                           class="form-control count-input" 
-                                           placeholder="Number of programmes"
-                                           min="0">
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
+<div id="programmes-container" class="block-container">
+{% if programmes %}
+    {% for p in programmes %}
+    <div class="programme-block" data-index="{{ forloop.counter }}">
+        <label class="required">Programme Type</label>
+        <select name="programme_type[]" class="form-control">
+            <option value="">Select</option>
+            <option value="Workshop" {% if p.programme_type == "Workshop" %}selected{% endif %}>Workshop</option>
+            <option value="FDP" {% if p.programme_type == "FDP" %}selected{% endif %}>FDP</option>
+            <option value="Conference" {% if p.programme_type == "Conference" %}selected{% endif %}>Conference</option>
+            <option value="Seminar" {% if p.programme_type == "Seminar" %}selected{% endif %}>Seminar</option>
+            <option value="Webinar" {% if p.programme_type == "Webinar" %}selected{% endif %}>Webinar</option>
+            <option value="Other" {% if p.programme_type == "Other" %}selected{% endif %}>Other</option>
+        </select>
 
-                <button type="button" class="btn btn-add" onclick="addProgramme()">
-                    <i class="fas fa-plus-circle"></i> Add More Programme Type
-                </button>
+        <label class="required">Count</label>
+        <input type="number" name="programme_count[]" class="form-control"
+               value="{{ p.count }}">
 
-                <!-- Section Divider -->
-                <div class="section-divider"></div>
-
-                <!-- Publications Section -->
-                <h2 class="section-title">Publications</h2>
-                
-                <div id="publications-container">
-                    {% if publications %}
-                        {% for pub in publications %}
-                        <div class="publication-block" data-index="{{ forloop.counter }}">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="publication_title_{{ forloop.counter }}" class="required">Publication Title</label>
-                                    <input type="text" 
-                                           name="publication_title[]" 
-                                           id="publication_title_{{ forloop.counter }}" 
-                                           class="form-control" 
-                                           placeholder="e.g., Title of research paper or book"
-                                           value="{{ pub.title }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="publication_indexing_{{ forloop.counter }}" class="required">Indexing/Identifier</label>
-                                    <select name="publication_indexing[]" id="publication_indexing_{{ forloop.counter }}" class="form-control">
-                                        <option value="">Select Indexing</option>
-                                        <option value="Scopus" {% if pub.indexing == "Scopus" %}selected{% endif %}>Scopus</option>
-                                        <option value="Web of Science" {% if pub.indexing == "Web of Science" %}selected{% endif %}>Web of Science</option>
-                                        <option value="SCI" {% if pub.indexing == "SCI" %}selected{% endif %}>SCI</option>
-                                        <option value="SCIE" {% if pub.indexing == "SCIE" %}selected{% endif %}>SCIE</option>
-                                        <option value="ESCI" {% if pub.indexing == "ESCI" %}selected{% endif %}>ESCI</option>
-                                        <option value="ISBN" {% if pub.indexing == "ISBN" %}selected{% endif %}>ISBN (Books)</option>
-                                        <option value="ISSN" {% if pub.indexing == "ISSN" %}selected{% endif %}>ISSN (Journals)</option>
-                                        <option value="UGC Care" {% if pub.indexing == "UGC Care" %}selected{% endif %}>UGC Care</option>
-                                        <option value="Peer Reviewed" {% if pub.indexing == "Peer Reviewed" %}selected{% endif %}>Peer Reviewed</option>
-                                        <option value="Non-indexed" {% if pub.indexing == "Non-indexed" %}selected{% endif %}>Non-indexed</option>
-                                        <option value="Other" {% if pub.indexing == "Other" %}selected{% endif %}>Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            {% if not forloop.first %}
-                            <button type="button" class="remove-btn" onclick="removePublication(this)">
-                                <i class="fas fa-trash-alt"></i> Remove Publication
-                            </button>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <!-- Default publication block -->
-                        <div class="publication-block" data-index="1">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="publication_title_1" class="required">Publication Title</label>
-                                    <input type="text" 
-                                           name="publication_title[]" 
-                                           id="publication_title_1" 
-                                           class="form-control" 
-                                           placeholder="e.g., Title of research paper or book">
-                                </div>
-                                <div class="form-group">
-                                    <label for="publication_indexing_1" class="required">Indexing/Identifier</label>
-                                    <select name="publication_indexing[]" id="publication_indexing_1" class="form-control">
-                                        <option value="">Select Indexing</option>
-                                        <option value="Scopus">Scopus</option>
-                                        <option value="Web of Science">Web of Science</option>
-                                        <option value="SCI">SCI</option>
-                                        <option value="SCIE">SCIE</option>
-                                        <option value="ESCI">ESCI</option>
-                                        <option value="ISBN">ISBN (Books)</option>
-                                        <option value="ISSN">ISSN (Journals)</option>
-                                        <option value="UGC Care">UGC Care</option>
-                                        <option value="Peer Reviewed">Peer Reviewed</option>
-                                        <option value="Non-indexed">Non-indexed</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <button type="button" class="btn btn-add" onclick="addPublication()">
-                    <i class="fas fa-plus-circle"></i> Add More Publication
-                </button>
-
-                <!-- Navigation Buttons -->
-                <div class="button-group">
-                    <button type="button" class="btn btn-prev" onclick="window.location.href='{% url 'teaching_and_contributions' %}'">
-                        <i class="fas fa-arrow-left"></i> Previous
-                    </button>
-                    <button type="submit" class="btn btn-next">
-                        Save & Next <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
+        {% if not forloop.first %}
+        <button type="button" class="remove-btn" onclick="removeBlock(this)">Remove</button>
+        {% endif %}
     </div>
+    {% endfor %}
+{% else %}
+    <div class="programme-block" data-index="1">
+        <label class="required">Programme Type</label>
+        <select name="programme_type[]" class="form-control">
+            <option value="">Select</option>
+            <option>Workshop</option>
+            <option>FDP</option>
+            <option>Conference</option>
+            <option>Seminar</option>
+            <option>Webinar</option>
+            <option>Other</option>
+        </select>
 
-    <script>
-        let programmeCounter = {{ programmes|length|default:1 }};
-        let publicationCounter = {{ publications|length|default:1 }};
-        
-        function addProgramme() {
-            programmeCounter++;
-            const container = document.getElementById('programmes-container');
-            const firstBlock = container.querySelector('.programme-block');
-            const newBlock = firstBlock.cloneNode(true);
-            
-            // Update index number
-            newBlock.setAttribute('data-index', programmeCounter);
-            
-            // Clear all input values in the new block
-            newBlock.querySelectorAll('input, select').forEach(input => {
-                input.value = '';
-                
-                // Update IDs to be unique
-                const oldId = input.id;
-                if (oldId) {
-                    const baseId = oldId.replace(/\d+$/, '');
-                    const newId = baseId + '_' + programmeCounter;
-                    input.id = newId;
-                    
-                    // Update label for attribute if exists
-                    const label = newBlock.querySelector(`label[for="${oldId}"]`);
-                    if (label) {
-                        label.setAttribute('for', newId);
-                    }
-                }
-            });
-            
-            // Add remove button
-            const removeBtn = newBlock.querySelector('.remove-btn');
-            if (!removeBtn) {
-                const newRemoveBtn = document.createElement('button');
-                newRemoveBtn.type = 'button';
-                newRemoveBtn.className = 'remove-btn';
-                newRemoveBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove Programme';
-                newRemoveBtn.onclick = function() { removeProgramme(this); };
-                newBlock.appendChild(newRemoveBtn);
-            }
-            
-            container.appendChild(newBlock);
-            newBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function removeProgramme(button) {
-            const block = button.closest('.programme-block');
-            if (document.querySelectorAll('.programme-block').length > 1) {
-                block.remove();
-                updateProgrammeIndices();
-            } else {
-                alert('You must have at least one programme entry.');
-            }
-        }
-        
-        function addPublication() {
-            publicationCounter++;
-            const container = document.getElementById('publications-container');
-            const firstBlock = container.querySelector('.publication-block');
-            const newBlock = firstBlock.cloneNode(true);
-            
-            // Update index number
-            newBlock.setAttribute('data-index', publicationCounter);
-            
-            // Clear all input values in the new block
-            newBlock.querySelectorAll('input, select').forEach(input => {
-                input.value = '';
-                
-                // Update IDs to be unique
-                const oldId = input.id;
-                if (oldId) {
-                    const baseId = oldId.replace(/\d+$/, '');
-                    const newId = baseId + '_' + publicationCounter;
-                    input.id = newId;
-                    
-                    // Update label for attribute if exists
-                    const label = newBlock.querySelector(`label[for="${oldId}"]`);
-                    if (label) {
-                        label.setAttribute('for', newId);
-                    }
-                }
-            });
-            
-            // Add remove button
-            const removeBtn = newBlock.querySelector('.remove-btn');
-            if (!removeBtn) {
-                const newRemoveBtn = document.createElement('button');
-                newRemoveBtn.type = 'button';
-                newRemoveBtn.className = 'remove-btn';
-                newRemoveBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Remove Publication';
-                newRemoveBtn.onclick = function() { removePublication(this); };
-                newBlock.appendChild(newRemoveBtn);
-            }
-            
-            container.appendChild(newBlock);
-            newBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function removePublication(button) {
-            const block = button.closest('.publication-block');
-            if (document.querySelectorAll('.publication-block').length > 1) {
-                block.remove();
-                updatePublicationIndices();
-            } else {
-                alert('You must have at least one publication entry.');
-            }
-        }
-        
-        function updateProgrammeIndices() {
-            const blocks = document.querySelectorAll('.programme-block');
-            blocks.forEach((block, index) => {
-                block.setAttribute('data-index', index + 1);
-                // Update IDs
-                block.querySelectorAll('input, select, label').forEach(element => {
-                    const oldId = element.id || element.getAttribute('for');
-                    if (oldId) {
-                        const baseId = oldId.replace(/\d+$/, '');
-                        const newId = baseId + '_' + (index + 1);
-                        if (element.id) element.id = newId;
-                        if (element.getAttribute('for')) element.setAttribute('for', newId);
-                    }
-                });
-            });
-            programmeCounter = blocks.length;
-        }
-        
-        function updatePublicationIndices() {
-            const blocks = document.querySelectorAll('.publication-block');
-            blocks.forEach((block, index) => {
-                block.setAttribute('data-index', index + 1);
-                // Update IDs
-                block.querySelectorAll('input, select, label').forEach(element => {
-                    const oldId = element.id || element.getAttribute('for');
-                    if (oldId) {
-                        const baseId = oldId.replace(/\d+$/, '');
-                        const newId = baseId + '_' + (index + 1);
-                        if (element.id) element.id = newId;
-                        if (element.getAttribute('for')) element.setAttribute('for', newId);
-                    }
-                });
-            });
-            publicationCounter = blocks.length;
-        }
-        
-        // Form validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const requiredFields = document.querySelectorAll('.required');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                const input = field.closest('.form-group').querySelector('input, select, textarea');
-                if (!input || !input.value.trim()) {
-                    isValid = false;
-                    input.style.borderColor = '#e74c3c';
-                    
-                    // Add error message if not exists
-                    if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('error-message')) {
-                        const error = document.createElement('div');
-                        error.className = 'error-message';
-                        error.style.color = '#e74c3c';
-                        error.style.fontSize = '12px';
-                        error.style.marginTop = '4px';
-                        error.textContent = 'This field is required';
-                        input.parentNode.appendChild(error);
-                    }
-                } else {
-                    input.style.borderColor = input.classList.contains('form-control') ? '#e0e6ed' : '';
-                    // Remove error message if exists
-                    const error = input.parentNode.querySelector('.error-message');
-                    if (error) {
-                        error.remove();
-                    }
-                    
-                    // Number validation for count fields
-                    if (input.type === 'number' && input.value < 0) {
-                        isValid = false;
-                        input.style.borderColor = '#e74c3c';
-                        const error = document.createElement('div');
-                        error.className = 'error-message';
-                        error.style.color = '#e74c3c';
-                        error.style.fontSize = '12px';
-                        error.style.marginTop = '4px';
-                        error.textContent = 'Count cannot be negative';
-                        input.parentNode.appendChild(error);
-                    }
-                }
-            });
-            
-            if (!isValid) {
-                e.preventDefault();
-                alert('Please fill all required fields marked with * and ensure they contain valid data.');
-            }
-        });
-    </script>
+        <label class="required">Count</label>
+        <input type="number" name="programme_count[]" class="form-control">
+    </div>
+{% endif %}
+</div>
+
+<button type="button" class="btn btn-add" onclick="addBlock('programme')">
++ Add More Programme
+</button>
+
+<!-- ================= PUBLICATIONS ================= -->
+<h2 class="section-title">Publications</h2>
+
+<div id="publications-container" class="block-container">
+{% if publications %}
+    {% for pub in publications %}
+    <div class="publication-block" data-index="{{ forloop.counter }}">
+        <label class="required">Publication Title</label>
+        <input type="text" name="publication_title[]" class="form-control"
+               value="{{ pub.title }}">
+
+        <label class="required">Indexing</label>
+        <select name="publication_indexing[]" class="form-control">
+            <option value="">Select</option>
+            <option value="Scopus" {% if pub.indexing == "Scopus" %}selected{% endif %}>Scopus</option>
+            <option value="Web of Science" {% if pub.indexing == "Web of Science" %}selected{% endif %}>Web of Science</option>
+            <option value="SCI" {% if pub.indexing == "SCI" %}selected{% endif %}>SCI</option>
+            <option value="UGC Care" {% if pub.indexing == "UGC Care" %}selected{% endif %}>UGC Care</option>
+            <option value="Other" {% if pub.indexing == "Other" %}selected{% endif %}>Other</option>
+        </select>
+
+        {% if not forloop.first %}
+        <button type="button" class="remove-btn" onclick="removeBlock(this)">Remove</button>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="publication-block" data-index="1">
+        <label class="required">Publication Title</label>
+        <input type="text" name="publication_title[]" class="form-control">
+
+        <label class="required">Indexing</label>
+        <select name="publication_indexing[]" class="form-control">
+            <option value="">Select</option>
+            <option>Scopus</option>
+            <option>Web of Science</option>
+            <option>SCI</option>
+            <option>UGC Care</option>
+            <option>Other</option>
+        </select>
+    </div>
+{% endif %}
+</div>
+
+<button type="button" class="btn btn-add" onclick="addBlock('publication')">
++ Add More Publication
+</button>
+
+<!-- ================= BUTTONS ================= -->
+<div class="button-group">
+<button type="button" class="btn btn-prev"
+        onclick="window.location.href='{% url "teaching_and_contributions" %}'">
+← Previous
+</button>
+<button type="submit" class="btn btn-next">
+Save & Next →
+</button>
+</div>
+
+</form>
+</div>
+</div>
+
+<script>
+function addBlock(type){
+    const map={
+        programme:['programmes-container','programme-block'],
+        publication:['publications-container','publication-block']
+    };
+
+    const [cid,cls]=map[type];
+    const container=document.getElementById(cid);
+    const clone=container.firstElementChild.cloneNode(true);
+
+    clone.querySelectorAll('input,select').forEach(el=>el.value="");
+
+    const removeBtn=document.createElement("button");
+    removeBtn.type="button";
+    removeBtn.className="remove-btn";
+    removeBtn.textContent="Remove";
+    removeBtn.onclick=function(){removeBlock(this)};
+    clone.appendChild(removeBtn);
+
+    container.appendChild(clone);
+    updateIndex(container);
+}
+
+function removeBlock(btn){
+    const container=btn.closest(".block-container");
+    btn.parentElement.remove();
+
+    if(container.children.length===1){
+        const rb=container.firstElementChild.querySelector(".remove-btn");
+        if(rb) rb.remove();
+    }
+    updateIndex(container);
+}
+
+function updateIndex(container){
+    [...container.children].forEach((b,i)=>{
+        b.setAttribute("data-index",i+1);
+    });
+}
+</script>
+
 </body>
 </html>
