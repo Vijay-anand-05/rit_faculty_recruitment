@@ -123,7 +123,7 @@ WSGI_APPLICATION = "faculty_recruitment.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'faculty_requirement',  # Replace with your actual default DB
+        'NAME': 'faculty_recruitment',  # Replace with your actual default DB
         'USER': 'root',
         'PASSWORD': '',
         'HOST': '127.0.0.1',

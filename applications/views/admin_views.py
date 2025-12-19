@@ -56,7 +56,7 @@ def admin_login(request):
                 session_key=request.session.session_key,
             )
 
-            return redirect("admin_dashboard")
+            return redirect("admin_home")
 
         # ❗ Failed login audit
         AdminLoginLog.objects.create(

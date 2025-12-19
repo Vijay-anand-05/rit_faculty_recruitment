@@ -5,7 +5,7 @@ urlpatterns = [
 
     # PAGE 1 — A. INDIVIDUAL SUMMARY SHEET
     path(
-        "individual-summary-sheet/",
+        "",
         views.individual_summary_sheet,
         name="individual_summary_sheet"
     ),

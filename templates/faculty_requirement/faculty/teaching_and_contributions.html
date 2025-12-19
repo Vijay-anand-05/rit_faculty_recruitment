@@ -1,3 +1,6 @@
+{% load faculty_tags %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -359,7 +362,8 @@
                             {% endif %}
                         {% endfor %}
                         
-                        {% if not subjects|selectattr:"level", "equalto", "UG" %}
+                        {% if subjects|count_level:"UG" == 0 %}
+
                         <div class="subject-block ug" data-index="1">
                             <div class="form-group">
                                 <label for="ug_subject_1" class="required">Subject & Result</label>
@@ -419,7 +423,8 @@
                             {% endif %}
                         {% endfor %}
                         
-                        {% if not subjects|selectattr:"level", "equalto", "PG" %}
+                        {% if subjects|count_level:"PG" == 0 %}
+
                         <div class="subject-block pg" data-index="1">
                             <div class="form-group">
                                 <label for="pg_subject_1" class="required">Subject & Result</label>
@@ -483,7 +488,8 @@
                             {% endif %}
                         {% endfor %}
                         
-                        {% if not contributions|selectattr:"level", "equalto", "Department" %}
+                            {% if contributions|count_level:"Department" == 0 %}
+
                         <div class="contribution-block department">
                             <div class="form-group">
                                 <label for="dept_contribution_1">Contribution</label>
@@ -539,7 +545,8 @@
                             {% endif %}
                         {% endfor %}
                         
-                        {% if not contributions|selectattr:"level", "equalto", "College" %}
+                        {% if contributions|count_level:"College" == 0 %}
+
                         <div class="contribution-block college">
                             <div class="form-group">
                                 <label for="college_contribution_1">Contribution</label>
@@ -581,10 +588,10 @@
     </div>
 
     <script>
-        let ugCounter = {{ subjects|selectattr:"level", "equalto", "UG"|list|length|default:1 }};
-        let pgCounter = {{ subjects|selectattr:"level", "equalto", "PG"|list|length|default:1 }};
-        let deptCounter = {{ contributions|selectattr:"level", "equalto", "Department"|list|length|default:1 }};
-        let collegeCounter = {{ contributions|selectattr:"level", "equalto", "College"|list|length|default:1 }};
+      let ugCounter = {{ subjects|count_level:"UG" }} || 1;
+    let pgCounter = {{ subjects|count_level:"PG" }} || 1;
+    let deptCounter = {{ contributions|count_level:"Department" }} || 1;
+    let collegeCounter = {{ contributions|count_level:"College" }} || 1;
         
         function addUG() {
             ugCounter++;
