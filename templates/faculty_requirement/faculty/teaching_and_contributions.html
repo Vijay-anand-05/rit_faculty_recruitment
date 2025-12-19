@@ -4,322 +4,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teaching & Contributions</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teaching & Contributions</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(to right, #2c3e50, #4a6491);
-            color: white;
-            padding: 30px 40px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 16px;
-        }
-
-        .form-section {
-            padding: 40px;
-        }
-
-        .section-title {
-            color: #2c3e50;
-            font-size: 22px;
-            font-weight: 600;
-            margin: 30px 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eaeaea;
-            position: relative;
-        }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 80px;
-            height: 2px;
-            background: #3498db;
-        }
-
-        .sub-section-title {
-            color: #475569;
-            font-size: 18px;
-            font-weight: 600;
-            margin: 25px 0 15px 0;
-            padding-left: 15px;
-            border-left: 4px solid #3498db;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #2c3e50;
-            font-weight: 500;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background: #f8fafc;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #3498db;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .form-control::placeholder {
-            color: #a0aec0;
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .subject-block {
-            background: #f0f9ff;
-            border: 2px solid #bae6fd;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .subject-block.ug {
-            background: #f0f9ff;
-            border-color: #bae6fd;
-        }
-
-        .subject-block.pg {
-            background: #fef7cd;
-            border-color: #fde68a;
-        }
-
-        .subject-block:before {
-            content: attr(data-index);
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: #3498db;
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .subject-block.pg:before {
-            background: #f59e0b;
-        }
-
-        .contribution-block {
-            background: #f8fafc;
-            border: 2px solid #e0e6ed;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .contribution-block.department {
-            border-left: 4px solid #10b981;
-        }
-
-        .contribution-block.college {
-            border-left: 4px solid #8b5cf6;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #eaeaea;
-        }
-
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-add {
-            background: #f1f5f9;
-            color: #2c3e50;
-            border: 2px dashed #cbd5e1;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .btn-add:hover {
-            background: #e2e8f0;
-            border-color: #94a3b8;
-        }
-
-        .btn-prev {
-            background: #64748b;
-            color: white;
-        }
-
-        .btn-prev:hover {
-            background: #475569;
-        }
-
-        .btn-next {
-            background: #3498db;
-            color: white;
-        }
-
-        .btn-next:hover {
-            background: #2980b9;
-        }
-
-        .remove-btn {
-            background: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .remove-btn:hover {
-            background: #fecaca;
-        }
-
-        .icon {
-            font-size: 16px;
-        }
-
-        .required:after {
-            content: " *";
-            color: #e74c3c;
-        }
-
-        .instructions {
-            background: #e8f4fc;
-            border-left: 4px solid #3498db;
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #2c3e50;
-        }
-
-        .instructions p {
-            margin-bottom: 5px;
-        }
-
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, #e0e6ed, transparent);
-            margin: 40px 0;
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .button-group {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            .header, .form-section {
-                padding: 25px;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Calibri','Segoe UI',sans-serif;background:#f8f9fa;padding:20px;color:#333}
+.container{max-width:1000px;margin:auto;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.1);overflow:hidden;border:1px solid #ddd}
+.header{background:#003366;color:#fff;padding:20px;text-align:center;border-bottom:4px solid #ffcc00}
+.header h1{font-size:24px;margin-bottom:5px;font-weight:600}
+.header p{font-size:14px;opacity:.9}
+.form-section{padding:25px}
+.section-title{color:#003366;font-size:18px;font-weight:600;margin:25px 0 15px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}
+.sub-section-title{color:#475569;font-size:16px;font-weight:600;margin:20px 0 10px;padding-left:10px;border-left:3px solid #003366}
+label{display:block;margin-bottom:5px;color:#003366;font-weight:500;font-size:14px}
+.required:after{content:" *";color:#d32f2f}
+.form-control,textarea{width:100%;padding:8px 12px;border:1px solid #ccc;border-radius:4px;font-size:14px}
+.subject-block,.contribution-block{background:#f5f7fa;border:1px solid #ddd;border-radius:5px;padding:15px;margin-bottom:10px;position:relative}
+.subject-block:before{content:attr(data-index);position:absolute;top:-10px;left:15px;background:#003366;color:#fff;width:20px;height:20px;border-radius:50%;text-align:center;line-height:20px;font-size:12px}
+.ug-block{background:#e8f4f8;border-color:#b3e0f2}
+.pg-block{background:#fff8e1;border-color:#ffd54f}
+.dept-block{border-left:4px solid #28a745}
+.college-block{border-left:4px solid #6f42c1}
+.btn{padding:8px 20px;border:none;border-radius:4px;cursor:pointer;font-size:14px}
+.btn-add{background:#e9ecef;color:#003366;border:1px dashed #adb5bd;width:100%;margin:10px 0}
+.btn-prev{background:#6c757d;color:#fff}
+.btn-next{background:#003366;color:#fff}
+.remove-btn{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;padding:5px 10px;border-radius:3px;font-size:12px;cursor:pointer;margin-top:10px}
+.button-group{display:flex;justify-content:space-between;margin-top:30px;padding-top:20px;border-top:1px solid #eee}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Header Section -->
-        <div class="header">
-            <h1>Teaching & Contributions</h1>
-            <p>Please provide details of subjects taught and institutional contributions</p>
-        </div>
+<div class="container">
+<div class="header">
+<h1>Teaching & Contributions</h1>
+<p>Subjects taught and institutional contributions</p>
+</div>
 
         <!-- Main Form -->
         <div class="form-section">
@@ -362,8 +84,7 @@
                             {% endif %}
                         {% endfor %}
                         
-                        {% if subjects|count_level:"UG" == 0 %}
-
+                        {% if not subjects|selectattr:"level", "equalto", "UG" %}
                         <div class="subject-block ug" data-index="1">
                             <div class="form-group">
                                 <label for="ug_subject_1" class="required">Subject & Result</label>
@@ -423,8 +144,7 @@
                             {% endif %}
                         {% endfor %}
                         
-                        {% if subjects|count_level:"PG" == 0 %}
-
+                        {% if not subjects|selectattr:"level", "equalto", "PG" %}
                         <div class="subject-block pg" data-index="1">
                             <div class="form-group">
                                 <label for="pg_subject_1" class="required">Subject & Result</label>
@@ -488,8 +208,7 @@
                             {% endif %}
                         {% endfor %}
                         
-                            {% if contributions|count_level:"Department" == 0 %}
-
+                        {% if not contributions|selectattr:"level", "equalto", "Department" %}
                         <div class="contribution-block department">
                             <div class="form-group">
                                 <label for="dept_contribution_1">Contribution</label>
@@ -545,8 +264,7 @@
                             {% endif %}
                         {% endfor %}
                         
-                        {% if contributions|count_level:"College" == 0 %}
-
+                        {% if not contributions|selectattr:"level", "equalto", "College" %}
                         <div class="contribution-block college">
                             <div class="form-group">
                                 <label for="college_contribution_1">Contribution</label>
@@ -588,10 +306,10 @@
     </div>
 
     <script>
-      let ugCounter = {{ subjects|count_level:"UG" }} || 1;
-    let pgCounter = {{ subjects|count_level:"PG" }} || 1;
-    let deptCounter = {{ contributions|count_level:"Department" }} || 1;
-    let collegeCounter = {{ contributions|count_level:"College" }} || 1;
+        let ugCounter = {{ subjects|selectattr:"level", "equalto", "UG"|list|length|default:1 }};
+        let pgCounter = {{ subjects|selectattr:"level", "equalto", "PG"|list|length|default:1 }};
+        let deptCounter = {{ contributions|selectattr:"level", "equalto", "Department"|list|length|default:1 }};
+        let collegeCounter = {{ contributions|selectattr:"level", "equalto", "College"|list|length|default:1 }};
         
         function addUG() {
             ugCounter++;

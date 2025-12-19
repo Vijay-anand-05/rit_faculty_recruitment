@@ -208,28 +208,44 @@ def academic_and_industry_experience(request):
 
 
 def teaching_and_contributions(request):
-    if request.method == "POST":
+    subjects = request.session.get("subjects", [])
+    contributions = request.session.get("contributions", [])
 
+    has_ug = any(s.get("level") == "UG" for s in subjects)
+    has_pg = any(s.get("level") == "PG" for s in subjects)
+
+    has_dept = any(c.get("level") == "Department" for c in contributions)
+    has_college = any(c.get("level") == "College" for c in contributions)
+
+    if request.method == "POST":
         subjects = []
         for s in request.POST.getlist("ug_subjects[]"):
             subjects.append({"level": "UG", "subject_and_result": s})
-
         for s in request.POST.getlist("pg_subjects[]"):
             subjects.append({"level": "PG", "subject_and_result": s})
 
         contributions = []
         for d in request.POST.getlist("department_contributions[]"):
             contributions.append({"level": "Department", "description": d})
-
         for c in request.POST.getlist("college_contributions[]"):
             contributions.append({"level": "College", "description": c})
 
         request.session["subjects"] = subjects
         request.session["contributions"] = contributions
-
         return redirect("programmes_and_publications")
 
-    return render(request, "faculty_requirement/faculty/teaching_and_contributions.html")
+    return render(
+        request,
+        "faculty_requirement/faculty/teaching_and_contributions.html",
+        {
+            "subjects": subjects,
+            "contributions": contributions,
+            "has_ug": has_ug,
+            "has_pg": has_pg,
+            "has_dept": has_dept,
+            "has_college": has_college,
+        }
+    )
 
 
 def programmes_and_publications(request):
@@ -240,21 +256,22 @@ def programmes_and_publications(request):
             request.POST.getlist("programme_type[]"),
             request.POST.getlist("programme_count[]"),
         ):
-            programmes.append({
-                "programme_type": ptype,
-                "category": request.POST.get("programme_category"),
-                "count": count,
-            })
+            if ptype or count:
+                programmes.append({
+                    "programme_type": ptype,
+                    "count": count,
+                })
 
         publications = []
         for title, indexing in zip(
             request.POST.getlist("publication_title[]"),
             request.POST.getlist("publication_indexing[]"),
         ):
-            publications.append({
-                "title": title,
-                "indexing": indexing,
-            })
+            if title or indexing:
+                publications.append({
+                    "title": title,
+                    "indexing": indexing,
+                })
 
         request.session["programmes"] = programmes
         request.session["publications"] = publications
@@ -269,7 +286,6 @@ def programmes_and_publications(request):
             "publications": request.session.get("publications", []),
         }
     )
-
 
 def to_int(value, default=0):
     try:
