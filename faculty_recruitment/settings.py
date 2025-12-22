@@ -91,6 +91,18 @@ X_FRAME_OPTIONS = "DENY"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'  # Replace with your SMTP server address
+# EMAIL_PORT = 465  # Common port for TLS
+# EMAIL_USE_SSL = True
+# EMAIL_USE_TLS = False  # Use TLS for secure connection
+# EMAIL_HOST_USER = 'ritegovernance@ritrjpm.ac.in'  # Your email address
+# EMAIL_HOST_PASSWORD = 'gmcs gqpv xait trgx'  # Your email password or app-specific password
+# DEFAULT_FROM_EMAIL = 'ritegovernance@ritrjpm.ac.in'  # Default sender for emails
+
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

@@ -677,6 +677,23 @@
                 </a>
             </div>
             
+            {% comment %} <div class="menu-item">
+                <a href="{% url 'resources' %}" class="menu-link {% if request.resolver_match.url_name == 'resources' %}active{% endif %}">
+                    <i class="fas fa-home"></i>
+                    <span>Resources</span>
+                    <span class="badge">Res</span>
+                </a>
+            </div> {% endcomment %}
+            <div class="menu-item">
+                <a href="{% url 'organizations' %}"
+                class="menu-link {% if request.resolver_match.url_name == 'organizations' %}active{% endif %}">
+                    <i class="fas fa-sitemap"></i>
+                    <span>Organization Setup</span>
+                    <span class="badge">Org</span>
+                </a>
+            </div>
+
+
             <div class="menu-item">
                 <a href="{% url 'admin_dashboard' %}" class="menu-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
                     <i class="fas fa-chart-line"></i>
@@ -685,13 +702,22 @@
                 </a>
             </div>
             <div class="menu-item">
-    <a href="{% url 'logs' %}"
-       class="menu-link {% if request.resolver_match.url_name in 'logs admin_logs' %}active{% endif %}">
-        <i class="fas fa-clipboard-list"></i>
-        <span>Activity Logs</span>
-        <span class="badge">New</span>
-    </a>
-</div>
+                <a href="{% url 'faculty_data' %}"
+                class="menu-link {% if request.resolver_match.url_name in 'faculty_data admin_logs' or request.resolver_match.url_name == 'user_logs' %}active{% endif %}">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Faculty Data</span>
+                    <span class="badge">Data</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'logs' %}"
+                class="menu-link {% if request.resolver_match.url_name in 'logs admin_logs' or request.resolver_match.url_name == 'user_logs' %}active{% endif %}">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Activity Logs</span>
+                    <span class="badge">New</span>
+                </a>
+            </div>
+            
 
 
 

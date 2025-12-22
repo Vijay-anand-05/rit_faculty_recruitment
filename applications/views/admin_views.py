@@ -16,7 +16,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import update_session_auth_hash
-from applications.models import AdminLoginLog
+from applications.models import AdminLoginLog, VisitorLog, ApplicationUsageLog
 
 
 def is_admin(user):
@@ -189,6 +189,175 @@ def admin_logs(request):
                 "action": action,
                 "ip": ip,
                 "ua": ua,
+            },
+        },
+    )
+
+
+# @login_required(login_url="admin_login")
+# @user_passes_test(is_admin)
+# def user_logs(request):
+
+#     base_qs = VisitorLog.objects.select_related("user").all()
+
+#     # ---------------- FILTERS ----------------
+#     user_id = request.GET.get("user", "")
+#     ip = request.GET.get("ip", "")
+#     device = request.GET.get("device", "")
+#     method = request.GET.get("method", "")
+
+#     if user_id:
+#         base_qs = base_qs.filter(user__id=user_id)
+
+#     if ip:
+#         base_qs = base_qs.filter(ip_address=ip)
+
+#     if device:
+#         base_qs = base_qs.filter(device_type=device)
+
+#     if method:
+#         base_qs = base_qs.filter(method=method)
+
+#     # ---------------- ANALYTICS ----------------
+#     analytics = {
+#         "total": base_qs.count(),
+#         "authenticated": base_qs.filter(user__isnull=False).count(),
+#         "anonymous": base_qs.filter(user__isnull=True).count(),
+#         "unique_ips": base_qs.values("ip_address").distinct().count(),
+#         "last_activity": base_qs.aggregate(last=Max("timestamp"))["last"],
+#     }
+
+#     # ---------------- TABLE ----------------
+#     logs_qs = (
+#         base_qs.only(
+#             "timestamp",
+#             "user",
+#             "ip_address",
+#             "device_type",
+#             "path",
+#             "method",
+#             "user_agent",
+#         )
+#         .order_by("-timestamp")
+#     )
+
+#     paginator = Paginator(logs_qs, 50)
+#     page_obj = paginator.get_page(request.GET.get("page"))
+
+#     # ---------------- DROPDOWNS ----------------
+#     users = (
+#         VisitorLog.objects
+#         .exclude(user__isnull=True)
+#         .values("user__id", "user__username")
+#         .distinct()[:200]
+#     )
+
+#     ips = (
+#         VisitorLog.objects
+#         .order_by("ip_address")
+#         .values_list("ip_address", flat=True)
+#         .distinct()[:200]
+#     )
+
+#     return render(
+#         request,
+#         "faculty_requirement/admin/user_logs.html",
+#         {
+#             "page_obj": page_obj,
+#             "analytics": analytics,
+#             "users": users,
+#             "ips": ips,
+#             "filters": {
+#                 "user": user_id,
+#                 "ip": ip,
+#                 "device": device,
+#                 "method": method,
+#             },
+#         },
+#     )
+
+
+@login_required(login_url="admin_login")
+@user_passes_test(is_admin)
+def user_logs(request):
+
+    # ---------------- BASE QUERYSET ----------------
+    base_qs = (
+        ApplicationUsageLog.objects
+        .select_related("candidate")
+        .all()
+    )
+
+    # ---------------- FILTERS ----------------
+    candidate_id = request.GET.get("candidate", "")
+    action = request.GET.get("action", "")
+    ip = request.GET.get("ip", "")
+    device = request.GET.get("device", "")
+
+    if candidate_id:
+        base_qs = base_qs.filter(candidate__id=candidate_id)
+
+    if action:
+        base_qs = base_qs.filter(action=action)
+
+    if ip:
+        base_qs = base_qs.filter(ip_address=ip)
+
+    if device:
+        base_qs = base_qs.filter(device_type=device)
+
+    # ---------------- ANALYTICS ----------------
+    analytics = {
+        "total": base_qs.count(),
+        "submitted": base_qs.filter(action="FORM_SUBMITTED").count(),
+        "unique_candidates": base_qs.values("candidate").distinct().count(),
+        "unique_ips": base_qs.values("ip_address").distinct().count(),
+        "last_activity": base_qs.aggregate(last=Max("timestamp"))["last"],
+    }
+
+    # ---------------- TABLE ----------------
+    logs_qs = (
+        base_qs.only(
+            "timestamp",
+            "candidate",
+            "action",
+            "ip_address",
+            "device_type",
+            "user_agent",
+        )
+        .order_by("-timestamp")
+    )
+
+    paginator = Paginator(logs_qs, 50)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    # ---------------- DROPDOWNS ----------------
+    candidates = (
+        ApplicationUsageLog.objects
+        .values("candidate__id", "candidate__name")
+        .distinct()[:200]
+    )
+
+    ips = (
+        ApplicationUsageLog.objects
+        .order_by("ip_address")
+        .values_list("ip_address", flat=True)
+        .distinct()[:200]
+    )
+
+    return render(
+        request,
+        "faculty_requirement/admin/user_logs.html",
+        {
+            "page_obj": page_obj,
+            "analytics": analytics,
+            "candidates": candidates,
+            "ips": ips,
+            "filters": {
+                "candidate": candidate_id,
+                "action": action,
+                "ip": ip,
+                "device": device,
             },
         },
     )
