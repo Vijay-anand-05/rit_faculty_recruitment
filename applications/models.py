@@ -1,64 +1,102 @@
+import os
 from django.db import models
 
 from django.db import models
 from django.contrib.auth.models import User
 
+import os
+from applications.utils import candidate_photo_path
 
+
+# def candidate_photo_path(instance, filename):
+#     # Clean name for folder (avoid spaces & special chars)
+#     name = instance.name.replace(" ", "_") if instance.name else "unknown"
+#     return os.path.join("candidate_photos", name, filename)
 
 
 class Candidate(models.Model):
-    name = models.CharField(max_length=200,null=True)
+    name = models.CharField(max_length=200, null=True)
     age = models.IntegerField(null=True)
     date_of_birth = models.DateField(null=True)
 
-    gender = models.CharField(max_length=20,null=True)
-    marital_status = models.CharField(max_length=20,null=True)
+    gender = models.CharField(max_length=20, null=True)
+    marital_status = models.CharField(max_length=20, null=True)
 
-    community = models.CharField(max_length=100,null=True)
-    caste = models.CharField(max_length=100,null=True)
+    community = models.CharField(max_length=100, null=True)
+    caste = models.CharField(max_length=100, null=True)
 
-    pan_number = models.CharField(max_length=20,null=True)
+    pan_number = models.CharField(max_length=20, null=True)
 
     email = models.EmailField(null=True)
-    phone_primary = models.CharField(max_length=100,null=True)
+    phone_primary = models.CharField(max_length=100, null=True)
     phone_secondary = models.CharField(max_length=100, blank=True)
-    photo = models.ImageField(upload_to="candidate_photos/", null=True, blank=True)
+
+    photo = models.ImageField(
+        upload_to=candidate_photo_path,
+        null=True,
+        blank=True
+    )
+
     address = models.TextField()
 
     total_experience_years = models.IntegerField(null=True)
     present_post_years = models.IntegerField(null=True)
 
-    mother_name_and_occupation = models.CharField(max_length=200,null=True)
+    mother_name_and_occupation = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return self.name
 
+
+
+# models.py
+
 class PositionApplication(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
 
-    position_applied = models.CharField(max_length=100,null=True)
-    department = models.CharField(max_length=100,null=True)
+    position_applied = models.CharField(max_length=100, null=True, blank=True)
+    department = models.CharField(max_length=100, null=True, blank=True)
 
-    present_designation = models.CharField(max_length=200,null=True)
-    present_organization = models.CharField(max_length=200,null=True)
+    present_designation = models.CharField(max_length=200, null=True, blank=True)
+    present_organization = models.CharField(max_length=200, null=True, blank=True)
 
-    specialization = models.CharField(max_length=100,null=True)
+    specialization = models.CharField(max_length=200, null=True, blank=True)
 
-    assistant_professor_years = models.IntegerField(default=0)
-    associate_professor_years = models.IntegerField(default=0)
-    professor_years = models.IntegerField(default=0)
-    other_years = models.IntegerField(default=0, blank=True)
+    assistant_professor_years = models.PositiveIntegerField(default=0)
+    associate_professor_years = models.PositiveIntegerField(default=0)
+    professor_years = models.PositiveIntegerField(default=0)
+    other_years = models.PositiveIntegerField(default=0)
 
-    research_experience_years = models.IntegerField(default=0)
-    industry_experience_years = models.IntegerField(default=0)
+    research_experience_years = models.PositiveIntegerField(default=0)
+    industry_experience_years = models.PositiveIntegerField(default=0)
 
-    journal_publications = models.IntegerField(default=0)
-    conference_publications = models.IntegerField(default=0)
+    journal_publications = models.PositiveIntegerField(default=0)
+    conference_publications = models.PositiveIntegerField(default=0)
 
-    students_guided_completed = models.IntegerField(default=0)
-    students_guided_ongoing = models.IntegerField(default=0)
+    students_guided_completed = models.PositiveIntegerField(default=0)
+    students_guided_ongoing = models.PositiveIntegerField(default=0)
 
-    community_and_caste = models.CharField(max_length=100)
+    community_and_caste = models.CharField(max_length=150, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now=True)
+
+
+class Qualification(models.Model):
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+
+    qualification = models.CharField(max_length=50)
+    specialization = models.CharField(max_length=100, null=True, blank=True)
+    institute = models.CharField(max_length=200, null=True, blank=True)
+    year = models.PositiveIntegerField(null=True, blank=True)
+
+
+class SponsoredProject(models.Model):
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+
+    title = models.CharField(max_length=300)
+    duration = models.CharField(max_length=50, null=True, blank=True)
+    amount = models.PositiveIntegerField(null=True, blank=True)
+    agency = models.CharField(max_length=200, null=True, blank=True)
 
 
 class Education(models.Model):
@@ -78,20 +116,20 @@ class Education(models.Model):
 
 
 class ResearchDetails(models.Model):
-    candidate = models.OneToOneField(Candidate, on_delete=models.CASCADE,null=True)
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, null=True)
 
-    mode_ug = models.CharField(max_length=10,null=True)
-    mode_pg = models.CharField(max_length=10,null=True)
-    mode_phd = models.CharField(max_length=20,null=True)
+    mode_ug = models.CharField(max_length=30, null=True, blank=True)
+    mode_pg = models.CharField(max_length=30, null=True, blank=True)
+    mode_phd = models.CharField(max_length=30, null=True, blank=True)
 
-    arrears_ug = models.IntegerField(default=0)
-    arrears_pg = models.IntegerField(default=0)
+    arrears_ug = models.IntegerField(null=True, blank=True)
+    arrears_pg = models.IntegerField(null=True, blank=True)
 
-    gate_score = models.CharField(max_length=50, blank=True,null=True)
-    net_slet_score = models.CharField(max_length=50, blank=True,null=True)
+    gate_score = models.CharField(max_length=50, null=True, blank=True)
+    net_slet_score = models.CharField(max_length=50, null=True, blank=True)
 
-    me_thesis_title = models.TextField(blank=True,null=True)
-    phd_thesis_title = models.TextField(blank=True,null=True)
+    me_thesis_title = models.TextField(null=True, blank=True)
+    phd_thesis_title = models.TextField(null=True, blank=True)
 
 
 
@@ -240,3 +278,26 @@ class ApplicationUsageLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
+# models.py
+class ProgrammesPublications(models.Model):
+    candidate = models.ForeignKey(
+        Candidate,
+        on_delete=models.CASCADE,
+        related_name="programmes_publications"
+    )
+
+    programmes = models.CharField(max_length=1000, default="", null=True)
+    publications = models.CharField(max_length=1000, default="", null=True)
+
+    research_publications_details = models.CharField(max_length=1000, default="", null=True)
+    research_scholars_details = models.TextField(blank=True, null=True)
+
+    sponsored_projects = models.CharField(max_length=1000, default="", null=True)
+    memberships = models.CharField(max_length=1000, default="", null=True)
+    awards = models.CharField(max_length=1000, default="", null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Programmes & Publications - {self.candidate.name}"

@@ -30,13 +30,18 @@
         .education-block { background: #f5f7fa; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; position: relative; }
         .education-block:before { content: attr(data-index); position: absolute; top: -10px; left: 15px; background: #003366; color: white; width: 20px; height: 20px; border-radius: 50%; text-align: center; line-height: 20px; font-size: 12px; }
         
+        .education-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
+        .education-header h3 { font-size: 16px; color: #003366; margin: 0; }
+        
         .btn { padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: 0.3s; }
         .btn-add { background: #e9ecef; color: #003366; border: 1px dashed #adb5bd; width: 100%; margin: 10px 0; }
         .btn-add:hover { background: #dee2e6; }
         .btn-prev { background: #6c757d; color: white; }
         .btn-next { background: #003366; color: white; }
+        .btn-remove { background: #dc3545; color: white; font-size: 12px; padding: 5px 10px; }
         .btn-prev:hover { background: #545b62; }
         .btn-next:hover { background: #002244; }
+        .btn-remove:hover { background: #c82333; }
         
         .button-group { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
         
@@ -48,6 +53,7 @@
             .form-group { min-width: 100%; }
             .button-group { flex-direction: column; gap: 10px; }
             .btn { width: 100%; }
+            .education-header { flex-direction: column; align-items: flex-start; gap: 10px; }
         }
     </style>
 </head>
@@ -71,6 +77,12 @@
                     {% if education %}
                         {% for edu in education %}
                         <div class="education-block" data-index="{{ forloop.counter }}">
+                            <div class="education-header">
+                                <h3>Qualification #{{ forloop.counter }}</h3>
+                                {% if not forloop.first %}
+                                <button type="button" class="btn btn-remove" onclick="removeEdu(this)">Remove</button>
+                                {% endif %}
+                            </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="required">Category</label>
@@ -129,6 +141,10 @@
                         {% endfor %}
                     {% else %}
                         <div class="education-block" data-index="1">
+                            <div class="education-header">
+                                <h3>Qualification #1</h3>
+                                <!-- No remove button for first block -->
+                            </div>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="required">Category</label>
@@ -247,14 +263,14 @@
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label>ME/MTech Thesis Title</label>
-                        <textarea name="me_thesis_title" class="form-control">{{ research.me_thesis_title|default:'' }}</textarea>
+                        <textarea name="me_thesis_title" class="form-control" rows="3">{{ research.me_thesis_title|default:'' }}</textarea>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label>PhD Thesis Title</label>
-                        <textarea name="phd_thesis_title" class="form-control">{{ research.phd_thesis_title|default:'' }}</textarea>
+                        <textarea name="phd_thesis_title" class="form-control" rows="3">{{ research.phd_thesis_title|default:'' }}</textarea>
                     </div>
                 </div>
 
@@ -267,6 +283,7 @@
     </div>
 
     <script>
+        // Initialize counter
         let eduCounter = {{ education|length|default:1 }};
         
         function addEdu() {
@@ -275,13 +292,82 @@
             const firstBlock = container.querySelector('.education-block');
             const newBlock = firstBlock.cloneNode(true);
             
+            // Update block attributes
             newBlock.setAttribute('data-index', eduCounter);
-            newBlock.querySelectorAll('input, select, textarea').forEach(input => input.value = '');
-            newBlock.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+            
+            // Update header
+            const header = newBlock.querySelector('.education-header');
+            header.querySelector('h3').textContent = `Qualification #${eduCounter}`;
+            
+            // Add remove button if not present
+            if (!header.querySelector('.btn-remove')) {
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-remove';
+                removeBtn.textContent = 'Remove';
+                removeBtn.onclick = function() { removeEdu(this); };
+                header.appendChild(removeBtn);
+            }
+            
+            // Clear all input values
+            newBlock.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+                input.value = '';
+            });
+            
+            newBlock.querySelectorAll('select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+            
+            newBlock.querySelectorAll('textarea').forEach(textarea => {
+                textarea.value = '';
+            });
             
             container.appendChild(newBlock);
+            updateBlockNumbers();
         }
         
+        function removeEdu(button) {
+            const block = button.closest('.education-block');
+            const container = document.getElementById('edu-container');
+            const blocks = container.querySelectorAll('.education-block');
+            
+            // Don't remove if it's the only block
+            if (blocks.length > 1) {
+                block.remove();
+                eduCounter--;
+                updateBlockNumbers();
+            } else {
+                alert('At least one qualification is required.');
+            }
+        }
+        
+        function updateBlockNumbers() {
+            const container = document.getElementById('edu-container');
+            const blocks = container.querySelectorAll('.education-block');
+            
+            blocks.forEach((block, index) => {
+                const blockNumber = index + 1;
+                block.setAttribute('data-index', blockNumber);
+                block.querySelector('.education-header h3').textContent = `Qualification #${blockNumber}`;
+                
+                // Keep remove button only for blocks after the first one
+                const header = block.querySelector('.education-header');
+                const removeBtn = header.querySelector('.btn-remove');
+                
+                if (index === 0 && removeBtn) {
+                    removeBtn.remove();
+                } else if (index > 0 && !removeBtn) {
+                    const newRemoveBtn = document.createElement('button');
+                    newRemoveBtn.type = 'button';
+                    newRemoveBtn.className = 'btn btn-remove';
+                    newRemoveBtn.textContent = 'Remove';
+                    newRemoveBtn.onclick = function() { removeEdu(this); };
+                    header.appendChild(newRemoveBtn);
+                }
+            });
+        }
+        
+        // Form validation
         document.querySelector('form').addEventListener('submit', function(e) {
             const required = document.querySelectorAll('.required');
             let valid = true;
@@ -298,6 +384,11 @@
                 e.preventDefault();
                 alert('Please fill all required fields (*)');
             }
+        });
+        
+        // Initialize block numbers on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBlockNumbers();
         });
     </script>
 </body>
