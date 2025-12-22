@@ -240,3 +240,35 @@ class ApplicationUsageLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
+# === Organization Masters ===
+class Degree(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Department(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+    # New fields
+    code = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    degree = models.ForeignKey('Degree', on_delete=models.SET_NULL, null=True, blank=True, related_name='departments')
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Designation(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class LevelOfEducation(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
