@@ -4,13 +4,23 @@
 <h2 style="margin-bottom:20px;">System Resources</h2>
 
 <div class="log-container">
-    <a href="{% url 'admin_logs' %}" class="log-card admin">
-        <h3>Administrator Activity</h3>
+    <a href="{% url 'degree' %}" class="log-card admin">
+        <h3>Add Degree</h3>
         <p>Review administrator access history, login attempts, security events, and system actions.</p>
     </a>
 
-    <a href="{% url 'user_logs' %}" class="log-card user">
-        <h3>User Activity Records</h3>
+    <a href="{% url 'department' %}" class="log-card user">
+        <h3>Add Department</h3>
+        <p>Analyze user access patterns, application usage, and interaction history within the system.</p>
+    </a>
+
+    <a href="{% url 'designation' %}" class="log-card user">
+        <h3>Add Designation</h3>
+        <p>Analyze user access patterns, application usage, and interaction history within the system.</p>
+    </a>
+
+    <a href="{% url 'level_of_education' %}" class="log-card user">
+        <h3>Add Level of Education</h3>
         <p>Analyze user access patterns, application usage, and interaction history within the system.</p>
     </a>
 </div>
