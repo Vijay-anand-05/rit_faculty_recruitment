@@ -1,3 +1,8 @@
+{% load static %}
+{% load faculty_tags %}
+{% departments as departments %}
+{% designations as designations %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,33 +30,69 @@
             <div class="form-row">
                 <div class="form-group full-width">
                     <label>Upload Photograph</label>
-                    <input type="file" name="photo" id="photoInput" class="form-control" accept="image/*">
-                    <div class="image-preview-container">
-                        {% if data.photo %}
-                        <img id="imagePreview" src="{{ data.photo }}" class="image-preview" style="display:block">
-                        {% else %}
-                        <img id="imagePreview" class="image-preview">
-                        {% endif %}
-                    </div>
-                </div>
+
+                    <input type="file" name="photo" id="photoInput" class="form-control">
+
+                    {% if data.photo_name %}
+                        <small style="display:block;margin-top:6px;color:#555;">
+                            📎 Uploaded file: <strong>{{ data.photo_name }}</strong>
+                        </small>
+                    {% endif %}
+
+    <div class="image-preview-container">
+        {% if data.photo %}
+            <img
+                id="imagePreview"
+                src="{{ MEDIA_URL }}{{ data.photo }}"
+                class="image-preview"
+                style="display:block;"
+            >
+        {% else %}
+            <img id="imagePreview" class="image-preview">
+        {% endif %}
+    </div>
+</div>
             </div>
             <h2 class="section-title">Application Details</h2>
             <div class="form-row">
                 <div class="form-group">
-                    <label class="required">Position Applied For</label>
-                    <select name="position_applied" class="form-control">
-                        <option value="">Select Position</option>
-                        <option value="Assistant Professor" {% if data.position_applied == "Assistant Professor" %}selected{% endif %}>Assistant Professor</option>
-                        <option value="Associate Professor" {% if data.position_applied == "Associate Professor" %}selected{% endif %}>Associate Professor</option>
-                        <option value="Professor" {% if data.position_applied == "Professor" %}selected{% endif %}>Professor</option>
-                        <option value="Lecturer" {% if data.position_applied == "Lecturer" %}selected{% endif %}>Lecturer</option>
-                        <option value="Researcher" {% if data.position_applied == "Researcher" %}selected{% endif %}>Researcher</option>
-                    </select>
-                </div>
+    <label class="required">Position Applied For</label>
+    <select name="position_applied" class="form-control" required>
+        <option value="" {% if not data or not data.id %}selected{% endif %}>
+            Select Position
+        </option>
+
+        {% for d in designations %}
+            <option value="{{ d.id }}"
+                {% if data and data.position_applied and data.position_applied.id == d.id %}
+                    selected
+                {% endif %}
+            >
+                {{ d.name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
                 <div class="form-group">
-                    <label class="required">Department</label>
-                    <input type="text" name="department" class="form-control" value="{{ data.department|default:'' }}">
-                </div>
+    <label class="required">Department</label>
+    <select name="department" class="form-control" required>
+        <option value="" {% if not data or not data.id %}selected{% endif %}>
+            Select Department
+        </option>
+
+        {% for dept in departments %}
+            <option value="{{ dept.id }}"
+                {% if data and data.department and data.department.id == dept.id %}
+                    selected
+                {% endif %}
+            >
+              {{ dept.degree.degree_code }} - {{ dept.name }} ({{ dept.code }})
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
             </div>
             <h2 class="section-title">Candidate Information</h2>
             <div class="form-row">
@@ -66,9 +107,24 @@
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label class="required">Present Designation</label>
-                    <input type="text" name="present_designation" class="form-control" value="{{ data.present_designation|default:'' }}">
-                </div>
+    <label class="required">Present Designation</label>
+    <select name="present_designation" class="form-control" required>
+        <option value="" {% if not data or not data.id %}selected{% endif %}>
+            Select Present Designation
+        </option>
+
+        {% for d in designations %}
+            <option value="{{ d.id }}"
+                {% if data and data.present_designation and data.present_designation.id == d.id %}
+                    selected
+                {% endif %}
+            >
+                {{ d.name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
                 <div class="form-group">
                     <label class="required">Organization</label>
                     <input type="text" name="present_organization" class="form-control" value="{{ data.present_organization|default:'' }}">
@@ -354,12 +410,30 @@
     </div>
 </div>
 <script>
-document.getElementById('photoInput').addEventListener('change',function(e){const f=e.target.files[0];const p=document.getElementById('imagePreview');if(f){const r=new FileReader();r.onload=function(e){p.src=e.target.result;p.style.display='block'};r.readAsDataURL(f)}else{p.style.display='none';p.src=''}});
+// Image preview functionality - Fixed version
+document.getElementById('photoInput').addEventListener('change', function(e) {
+    const f = e.target.files[0];
+    const p = document.getElementById('imagePreview');
+
+    if (f) {
+        const r = new FileReader();
+        r.onload = function(e) {
+            p.src = e.target.result;
+            p.style.display = 'block';
+        };
+        r.readAsDataURL(f);
+    }
+    // Do nothing if no file selected - keeps existing image
+});
+
+// Existing functions from first script
 document.getElementById('add-qualification').addEventListener('click',function(){const c=document.getElementById('qualifications-container');const n=document.createElement('div');n.className='qualification-row';n.innerHTML='<div class="form-group"><label>Qualification</label><select name="qualification[]" class="form-control"><option value="">Select Qualification</option><option value="Ph.D">Ph.D</option><option value="M.Tech">M.Tech</option><option value="M.E">M.E</option><option value="M.S">M.S</option><option value="M.Sc">M.Sc</option><option value="B.Tech">B.Tech</option><option value="B.E">B.E</option></select></div><div class="form-group"><label>Specialization</label><input type="text" name="specialization[]" class="form-control" placeholder="Enter specialization"></div><div class="form-group"><label>University/Institute</label><input type="text" name="institute[]" class="form-control" placeholder="Enter university/institute"></div><div class="form-group"><label>Year</label><input type="number" name="year[]" class="form-control" placeholder="Year" min="1950" max="2030"></div><div class="form-group"><label>&nbsp;</label><button type="button" class="remove-qualification-btn" onclick="removeQualification(this)"><i class="fas fa-trash"></i> Remove</button></div>';c.appendChild(n)});
 function removeQualification(b){const r=b.closest('.qualification-row');if(r)r.remove()}
 document.getElementById('add-project-row').addEventListener('click',function(){const t=document.getElementById('projects-body');const n=document.createElement('tr');n.innerHTML='<td><input type="text" name="project_title[]" placeholder="Enter project title"></td><td><input type="text" name="project_duration[]" placeholder="e.g., 2020-2022"></td><td><input type="number" name="project_amount[]" placeholder="Amount in Rs."></td><td><input type="text" name="project_agency[]" placeholder="Sponsoring agency"></td><td><button type="button" class="remove-project-row" onclick="removeProjectRow(this)">Remove</button></td>';t.appendChild(n)});
 function removeProjectRow(b){const r=b.closest('tr');if(document.querySelectorAll('#projects-body tr').length>1)r.remove()}
 document.querySelector('form').addEventListener('submit',function(e){const r=document.querySelectorAll('.required');let v=true;r.forEach(f=>{const i=f.closest('.form-group').querySelector('input, select');if(!i.value.trim()){v=false;i.style.borderColor='#d32f2f'}});if(!v){e.preventDefault();alert('Please fill all required fields (*)')}});
+
+// DOMContentLoaded event - Keep existing
 document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('input[type="number"]').forEach(i=>{i.addEventListener('input',function(){if(this.value<0)this.value=0})});const e=document.getElementById('imagePreview');if(e&&e.src&&e.src.trim()!=='')e.style.display='block'});
 </script>
 </body>

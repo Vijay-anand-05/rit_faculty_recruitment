@@ -5,86 +5,117 @@ from django.db import models
 from django.contrib.auth.models import User
 
 import os
-from applications.utils import candidate_photo_path
+from applications.utils import candidate_profile_path, candidate_document_path
 
 
-# def candidate_photo_path(instance, filename):
-#     # Clean name for folder (avoid spaces & special chars)
-#     name = instance.name.replace(" ", "_") if instance.name else "unknown"
-#     return os.path.join("candidate_photos", name, filename)
+# === Organization Masters ===
+class Degree(models.Model):
+    degree_code = models.CharField(max_length=150, unique=True,null=True)
+    degree = models.CharField(max_length=150, unique=True,null=True)
+
+    def __str__(self) -> str:
+        return self.degree_code
 
 
-class Candidate(models.Model):
-    name = models.CharField(max_length=200, null=True)
-    age = models.IntegerField(null=True)
-    date_of_birth = models.DateField(null=True)
+class Department(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+    # New fields
+    code = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    degree = models.ForeignKey('Degree', on_delete=models.SET_NULL, null=True, blank=True, related_name='departments')
 
-    gender = models.CharField(max_length=20, null=True)
-    marital_status = models.CharField(max_length=20, null=True)
-
-    community = models.CharField(max_length=100, null=True)
-    caste = models.CharField(max_length=100, null=True)
-
-    pan_number = models.CharField(max_length=20, null=True)
-
-    email = models.EmailField(null=True)
-    phone_primary = models.CharField(max_length=100, null=True)
-    phone_secondary = models.CharField(max_length=100, blank=True)
-
-    photo = models.ImageField(
-        upload_to=candidate_photo_path,
-        null=True,
-        blank=True
-    )
-
-    address = models.TextField()
-
-    total_experience_years = models.IntegerField(null=True)
-    present_post_years = models.IntegerField(null=True)
-
-    mother_name_and_occupation = models.CharField(max_length=200, null=True)
-
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
+class Designation(models.Model):
+    name = models.CharField(max_length=150, unique=True, null=True, blank=True)
 
-# models.py
+    def __str__(self) -> str:
+        return self.name
+
+
+class LevelOfEducation(models.Model):
+    name = models.CharField(max_length=150, unique=True, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Document_Type(models.Model):
+    document_type = models.CharField(max_length=150, unique=True, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.document_type
+
+class Certificate_Permission(models.Model):
+    document_type = models.ForeignKey(Document_Type, on_delete=models.CASCADE, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
+    is_required = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"{self.document_type} - {self.department} - {'Required' if self.is_required else 'Optional'}"
+
+
+
+
+
+class Candidate(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    age = models.IntegerField(null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=20, null=True, blank=True)
+    marital_status = models.CharField(max_length=20, null=True, blank=True)
+    community = models.CharField(max_length=100, null=True, blank=True)
+    caste = models.CharField(max_length=100, null=True, blank=True)
+    pan_number = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    phone_primary = models.CharField(max_length=100, null=True, blank=True)
+    phone_secondary = models.CharField(max_length=100, null=True, blank=True)
+    photo = models.ImageField(
+        upload_to=candidate_profile_path,
+        null=True,
+        blank=True
+    )
+    address = models.TextField(null=True, blank=True)
+    total_experience_years = models.IntegerField(null=True, blank=True)
+    present_post_years = models.IntegerField(null=True, blank=True)
+    mother_name_and_occupation = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return self.name or "Unnamed Candidate"
+
+
+class Document(models.Model):
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+    document_type = models.ForeignKey('Document_Type', on_delete=models.CASCADE)  # Assuming Document_Type exists
+    file = models.FileField(upload_to=candidate_document_path, null=True, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
 
 class PositionApplication(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    position_applied = models.CharField(max_length=100, null=True, blank=True)
-    department = models.CharField(max_length=100, null=True, blank=True)
-
+    position_applied = models.ForeignKey('Designation', on_delete=models.SET_NULL, null=True, blank=True)  # Assuming Designation exists
+    department = models.ForeignKey('Department', on_delete=models.SET_NULL, null=True, blank=True)  # Assuming Department exists
     present_designation = models.CharField(max_length=200, null=True, blank=True)
     present_organization = models.CharField(max_length=200, null=True, blank=True)
-
     specialization = models.CharField(max_length=200, null=True, blank=True)
-
-    assistant_professor_years = models.PositiveIntegerField(default=0)
-    associate_professor_years = models.PositiveIntegerField(default=0)
-    professor_years = models.PositiveIntegerField(default=0)
-    other_years = models.PositiveIntegerField(default=0)
-
-    research_experience_years = models.PositiveIntegerField(default=0)
-    industry_experience_years = models.PositiveIntegerField(default=0)
-
-    journal_publications = models.PositiveIntegerField(default=0)
-    conference_publications = models.PositiveIntegerField(default=0)
-
-    students_guided_completed = models.PositiveIntegerField(default=0)
-    students_guided_ongoing = models.PositiveIntegerField(default=0)
-
+    assistant_professor_years = models.PositiveIntegerField(default=0, null=True, blank=True)
+    associate_professor_years = models.PositiveIntegerField(default=0, null=True, blank=True)
+    professor_years = models.PositiveIntegerField(default=0, null=True, blank=True)
+    other_years = models.PositiveIntegerField(default=0, null=True, blank=True)
+    research_experience_years = models.PositiveIntegerField(default=0, null=True, blank=True)
+    industry_experience_years = models.PositiveIntegerField(default=0, null=True, blank=True)
+    journal_publications = models.PositiveIntegerField(default=0, null=True, blank=True)
+    conference_publications = models.PositiveIntegerField(default=0, null=True, blank=True)
+    students_guided_completed = models.PositiveIntegerField(default=0, null=True, blank=True)
+    students_guided_ongoing = models.PositiveIntegerField(default=0, null=True, blank=True)
     community_and_caste = models.CharField(max_length=150, null=True, blank=True)
-
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 
 class Qualification(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    qualification = models.CharField(max_length=50)
+    qualification = models.CharField(max_length=50, null=True, blank=True)
     specialization = models.CharField(max_length=100, null=True, blank=True)
     institute = models.CharField(max_length=200, null=True, blank=True)
     year = models.PositiveIntegerField(null=True, blank=True)
@@ -92,8 +123,7 @@ class Qualification(models.Model):
 
 class SponsoredProject(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    title = models.CharField(max_length=300)
+    title = models.CharField(max_length=300, null=True, blank=True)
     duration = models.CharField(max_length=50, null=True, blank=True)
     amount = models.PositiveIntegerField(null=True, blank=True)
     agency = models.CharField(max_length=200, null=True, blank=True)
@@ -101,120 +131,85 @@ class SponsoredProject(models.Model):
 
 class Education(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    category = models.CharField(max_length=20,null=True)  # SSLC / HSC / UG / PG / PhD
-    degree = models.CharField(max_length=100,null=True)
-    specialization = models.CharField(max_length=100, blank=True,null=True)
-
-    year_of_passing = models.CharField(max_length=10,null=True)
-    institution = models.CharField(max_length=200,null=True)
-    university = models.CharField(max_length=200,null=True)
-
-    percentage = models.CharField(max_length=20,null=True)
-    class_obtained = models.CharField(max_length=50,null=True)
-
+    category = models.CharField(max_length=20, null=True, blank=True)  # SSLC / HSC / UG / PG / PhD
+    degree = models.CharField(max_length=100, null=True, blank=True)
+    specialization = models.CharField(max_length=100, null=True, blank=True)
+    year_of_passing = models.CharField(max_length=10, null=True, blank=True)
+    institution = models.CharField(max_length=200, null=True, blank=True)
+    university = models.CharField(max_length=200, null=True, blank=True)
+    percentage = models.CharField(max_length=20, null=True, blank=True)
+    class_obtained = models.CharField(max_length=50, null=True, blank=True)
 
 
 class ResearchDetails(models.Model):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, null=True)
-
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, null=True, blank=True)
     mode_ug = models.CharField(max_length=30, null=True, blank=True)
     mode_pg = models.CharField(max_length=30, null=True, blank=True)
     mode_phd = models.CharField(max_length=30, null=True, blank=True)
-
     arrears_ug = models.IntegerField(null=True, blank=True)
     arrears_pg = models.IntegerField(null=True, blank=True)
-
     gate_score = models.CharField(max_length=50, null=True, blank=True)
     net_slet_score = models.CharField(max_length=50, null=True, blank=True)
-
     me_thesis_title = models.TextField(null=True, blank=True)
     phd_thesis_title = models.TextField(null=True, blank=True)
 
 
-
 class AcademicExperience(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    institution = models.CharField(max_length=200)
-    designation = models.CharField(max_length=100)
-
-    joining_date = models.DateField(null=True)
-    relieving_date = models.CharField(max_length=50, blank=True)  # "Till Date" allowed
-
-    years = models.IntegerField(null=True)
-    months = models.IntegerField(null=True)
-    days = models.IntegerField(null=True)
-
-
+    institution = models.CharField(max_length=200, null=True, blank=True)
+    designation = models.CharField(max_length=100, null=True, blank=True)
+    joining_date = models.DateField(null=True, blank=True)
+    relieving_date = models.CharField(max_length=50, null=True, blank=True)  # "Till Date" allowed
+    years = models.IntegerField(null=True, blank=True)
+    months = models.IntegerField(null=True, blank=True)
+    days = models.IntegerField(null=True, blank=True)
 
 
 class IndustryExperience(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    organization = models.CharField(max_length=200)
-    designation = models.CharField(max_length=100)
-    nature_of_work = models.CharField(max_length=200)
-
-    joining_date = models.DateField(null=True)
-    relieving_date = models.DateField(null=True)
-
-    years = models.IntegerField(null=True)
-    months = models.IntegerField(null=True)
-    days = models.IntegerField(null=True)
-
+    organization = models.CharField(max_length=200, null=True, blank=True)
+    designation = models.CharField(max_length=100, null=True, blank=True)
+    nature_of_work = models.CharField(max_length=200, null=True, blank=True)
+    joining_date = models.DateField(null=True, blank=True)
+    relieving_date = models.DateField(null=True, blank=True)
+    years = models.IntegerField(null=True, blank=True)
+    months = models.IntegerField(null=True, blank=True)
+    days = models.IntegerField(null=True, blank=True)
 
 
 class TeachingSubject(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    level = models.CharField(max_length=10)  # UG / PG
-    subject_and_result = models.CharField(max_length=200)
-
+    level = models.CharField(max_length=10, null=True, blank=True)  # UG / PG
+    subject_and_result = models.CharField(max_length=200, null=True, blank=True)
 
 
 class Contribution(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    level = models.CharField(max_length=50)  # Department / College
-    description = models.CharField(max_length=200)
-
+    level = models.CharField(max_length=50, null=True, blank=True)  # Department / College
+    description = models.CharField(max_length=200, null=True, blank=True)
 
 
 class Programme(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    programme_type = models.CharField(max_length=50)  # Workshop / FDP etc
-    category = models.CharField(max_length=50, null=True)        # Participated / Organized
-    count = models.IntegerField()
+    programme_type = models.CharField(max_length=50, null=True, blank=True)  # Workshop / FDP etc
+    category = models.CharField(max_length=50, null=True, blank=True)  # Participated / Organized
+    count = models.IntegerField(null=True, blank=True)
 
 
 class Publication(models.Model):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE,null=True)
-
-    title = models.TextField()
-    indexing = models.CharField(max_length=100, null=True)
-
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, null=True, blank=True)
+    title = models.TextField(null=True, blank=True)
+    indexing = models.CharField(max_length=100, null=True, blank=True)
 
 
 class Referee(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    name = models.CharField(max_length=200)
-    designation = models.CharField(max_length=200)
-    organization = models.CharField(max_length=200)
-
-    contact_number = models.CharField(max_length=15)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    designation = models.CharField(max_length=200, null=True, blank=True)
+    organization = models.CharField(max_length=200, null=True, blank=True)
+    contact_number = models.CharField(max_length=15, null=True, blank=True)
 
 
-
-
-class Document(models.Model):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-
-    document_type = models.CharField(max_length=100)
-    file = models.FileField(upload_to="candidate_documents/")
-    uploaded_at = models.DateTimeField(auto_now_add=True)
 
 
 
@@ -302,35 +297,8 @@ class ProgrammesPublications(models.Model):
     def __str__(self):
         return f"Programmes & Publications - {self.candidate.name}"
 
-# === Organization Masters ===
-class Degree(models.Model):
-    name = models.CharField(max_length=150, unique=True)
-
-    def __str__(self) -> str:
-        return self.name
 
 
-class Department(models.Model):
-    name = models.CharField(max_length=150, unique=True)
-    # New fields
-    code = models.CharField(max_length=20, unique=True, null=True, blank=True)
-    degree = models.ForeignKey('Degree', on_delete=models.SET_NULL, null=True, blank=True, related_name='departments')
 
-    def __str__(self) -> str:
-        return self.name
-
-
-class Designation(models.Model):
-    name = models.CharField(max_length=150, unique=True)
-
-    def __str__(self) -> str:
-        return self.name
-
-
-class LevelOfEducation(models.Model):
-    name = models.CharField(max_length=150, unique=True)
-
-    def __str__(self) -> str:
-        return self.name
 
 

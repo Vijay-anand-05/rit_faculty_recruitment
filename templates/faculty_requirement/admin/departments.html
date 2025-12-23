@@ -24,7 +24,7 @@
             <select id="degreeSelect" name="degree_id" class="form-select" required>
               <option value="" disabled selected>Select a Degree</option>
               {% for d in degrees %}
-                <option value="{{ d.id }}">{{ d.name }}</option>
+                <option value="{{ d.id }}">{{ d.degree_code }} - {{ d.degree }}</option>
               {% endfor %}
             </select>
           </div>
@@ -101,7 +101,7 @@
                 <td class="dept-code">{{ item.code }}</td>
                 <td class="dept-degree"
                     data-degree-id="{{ item.degree.id }}">
-                  {{ item.degree.name }}
+                  {{ item.degree.degree_code }} - {{ item.degree.degree }}
                 </td>
                 <td class="text-end">
 

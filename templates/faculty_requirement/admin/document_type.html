@@ -1,7 +1,7 @@
 {% extends 'faculty_requirement/admin/base.html' %}
 {% load static %}
 
-{% block page_title %}Degrees{% endblock %}
+{% block page_title %}Document Types{% endblock %}
 
 {% block content %}
 <div class="row g-4">
@@ -11,33 +11,21 @@
     <div class="card shadow-sm h-100">
       <div class="card-body">
 
-        <h5 class="card-title mb-3" id="formTitle">Create Degree</h5>
+        <h5 class="card-title mb-3" id="formTitle">Create Document Type</h5>
 
-        <form method="post" action="{% url 'degree' %}" id="degreeForm">
+        <form method="post" action="{% url 'document_type' %}" id="documentTypeForm">
           {% csrf_token %}
 
           <input type="hidden" name="operation" id="formOperation" value="create">
-          <input type="hidden" name="id" id="formDegreeId">
+          <input type="hidden" name="id" id="formDocumentTypeId">
 
-          <!-- DEGREE CODE -->
           <div class="mb-3">
-            <label class="form-label">Degree Code</label>
+            <label class="form-label">Document Type</label>
             <input type="text"
                    class="form-control"
-                   id="degreeCode"
-                   name="degree_code"
-                   placeholder="e.g., BE, BTECH, ME"
-                   required>
-          </div>
-
-          <!-- DEGREE NAME -->
-          <div class="mb-3">
-            <label class="form-label">Degree Name</label>
-            <input type="text"
-                   class="form-control"
-                   id="degreeName"
-                   name="degree"
-                   placeholder="e.g., Bachelor of Engineering"
+                   id="documentTypeInput"
+                   name="document_type"
+                   placeholder="e.g., Aadhaar, PAN, Passport"
                    required>
           </div>
 
@@ -58,48 +46,45 @@
     </div>
   </div>
 
-  <!-- ================= DEGREE LIST ================= -->
+  <!-- ================= LIST ================= -->
   <div class="col-12 col-lg-8">
     <div class="card shadow-sm h-100">
       <div class="card-body">
 
         <div class="d-flex align-items-center justify-content-between mb-3">
-          <h5 class="card-title m-0">All Degrees</h5>
-          <div class="input-group" style="max-width: 280px;">
-            <span class="input-group-text"><i class="fa fa-search"></i></span>
-            <input id="degreeSearch" type="text" class="form-control" placeholder="Search...">
+          <h5 class="card-title m-0">All Document Types</h5>
+          <div class="input-group" style="max-width:280px;">
+            <span class="input-group-text">
+              <i class="fa fa-search"></i>
+            </span>
+            <input type="text" id="documentTypeSearch" class="form-control" placeholder="Search...">
           </div>
         </div>
 
         <div class="table-responsive">
-          <table class="table align-middle" id="degreeTable">
+          <table class="table align-middle" id="documentTypeTable">
             <thead>
               <tr>
                 <th style="width:60px;">#</th>
-                <th>Code</th>
-                <th>Degree</th>
+                <th>Document Type</th>
                 <th class="text-end" style="width:160px;">Actions</th>
               </tr>
             </thead>
             <tbody>
 
-              {% for item in degrees %}
+              {% for item in document_types %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td class="degree-code">{{ item.degree_code }}</td>
-                <td class="degree-name">{{ item.degree }}</td>
+                <td class="doc-type-name">{{ item.document_type }}</td>
                 <td class="text-end">
 
-                  <!-- EDIT -->
                   <button type="button"
                           class="btn btn-sm btn-outline-primary me-2 edit-btn"
                           data-id="{{ item.id }}"
-                          data-code="{{ item.degree_code }}"
-                          data-name="{{ item.degree }}">
+                          data-name="{{ item.document_type }}">
                     <i class="fa fa-edit me-1"></i>Edit
                   </button>
 
-                  <!-- DELETE -->
                   <button type="button"
                           class="btn btn-sm btn-outline-danger delete-btn"
                           data-id="{{ item.id }}">
@@ -110,8 +95,8 @@
               </tr>
               {% empty %}
               <tr>
-                <td colspan="4" class="text-center text-muted">
-                  No degrees found.
+                <td colspan="3" class="text-center text-muted">
+                  No document types found.
                 </td>
               </tr>
               {% endfor %}
@@ -120,8 +105,8 @@
           </table>
         </div>
 
-        <!-- HIDDEN DELETE FORM -->
-        <form method="post" action="{% url 'degree' %}" id="deleteForm" class="d-none">
+        <!-- DELETE FORM -->
+        <form method="post" action="{% url 'document_type' %}" id="deleteForm" class="d-none">
           {% csrf_token %}
           <input type="hidden" name="operation" value="delete">
           <input type="hidden" name="id" id="deleteFormId">
@@ -138,61 +123,53 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const formTitle = document.getElementById('formTitle');
   const formOperation = document.getElementById('formOperation');
-  const formDegreeId = document.getElementById('formDegreeId');
-  const degreeCode = document.getElementById('degreeCode');
-  const degreeName = document.getElementById('degreeName');
+  const formId = document.getElementById('formDocumentTypeId');
+  const input = document.getElementById('documentTypeInput');
   const submitBtn = document.getElementById('formSubmitBtn');
   const cancelBtn = document.getElementById('cancelEditBtn');
 
-  /* ===== INLINE EDIT ===== */
+  /* ===== EDIT ===== */
   document.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', function () {
-      formTitle.textContent = 'Edit Degree';
+      formTitle.textContent = 'Edit Document Type';
       formOperation.value = 'edit';
-      formDegreeId.value = this.dataset.id;
-
-      degreeCode.value = this.dataset.code;
-      degreeName.value = this.dataset.name;
+      formId.value = this.dataset.id;
+      input.value = this.dataset.name;
 
       submitBtn.innerHTML = '<i class="fa fa-save me-2"></i>Update';
       submitBtn.classList.replace('btn-primary', 'btn-warning');
-
       cancelBtn.classList.remove('d-none');
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
 
-  /* ===== CANCEL EDIT ===== */
+  /* ===== CANCEL ===== */
   cancelBtn.addEventListener('click', function () {
-    formTitle.textContent = 'Create Degree';
+    formTitle.textContent = 'Create Document Type';
     formOperation.value = 'create';
-    formDegreeId.value = '';
-
-    degreeCode.value = '';
-    degreeName.value = '';
+    formId.value = '';
+    input.value = '';
 
     submitBtn.innerHTML = '<i class="fa fa-plus me-2"></i>Create';
     submitBtn.classList.replace('btn-warning', 'btn-primary');
-
     cancelBtn.classList.add('d-none');
   });
 
-  /* ===== INLINE DELETE (CONFIRM CLICK) ===== */
-  let activeDeleteBtn = null;
+  /* ===== DELETE CONFIRM ===== */
+  let activeDelete = null;
 
   document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
 
-      if (activeDeleteBtn && activeDeleteBtn !== this) {
-        resetDelete(activeDeleteBtn);
-      }
+      if (activeDelete && activeDelete !== this) resetDelete(activeDelete);
 
       if (!this.classList.contains('confirming')) {
         this.classList.add('confirming', 'btn-danger');
         this.classList.remove('btn-outline-danger');
         this.innerHTML = '<i class="fa fa-check me-1"></i>Confirm';
-        activeDeleteBtn = this;
+        activeDelete = this;
         return;
       }
 
@@ -208,19 +185,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.addEventListener('click', function () {
-    if (activeDeleteBtn) {
-      resetDelete(activeDeleteBtn);
-      activeDeleteBtn = null;
+    if (activeDelete) {
+      resetDelete(activeDelete);
+      activeDelete = null;
     }
   });
 
-  /* ===== SEARCH FILTER ===== */
-  document.getElementById('degreeSearch').addEventListener('input', function () {
+  /* ===== SEARCH ===== */
+  document.getElementById('documentTypeSearch').addEventListener('input', function () {
     const q = this.value.toLowerCase();
-    document.querySelectorAll('#degreeTable tbody tr').forEach(tr => {
-      const code = tr.querySelector('.degree-code')?.textContent.toLowerCase() || '';
-      const name = tr.querySelector('.degree-name')?.textContent.toLowerCase() || '';
-      tr.style.display = (code.includes(q) || name.includes(q)) ? '' : 'none';
+    document.querySelectorAll('#documentTypeTable tbody tr').forEach(tr => {
+      const text = tr.querySelector('.doc-type-name')?.textContent.toLowerCase() || '';
+      tr.style.display = text.includes(q) ? '' : 'none';
     });
   });
 
