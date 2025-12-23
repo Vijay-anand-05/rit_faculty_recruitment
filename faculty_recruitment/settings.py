@@ -79,17 +79,23 @@ MIDDLEWARE.insert(0, "applications.middleware.VisitorLoggingMiddleware")
 # ]
 
 
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
-CSRF_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_HTTPONLY = True
 
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = "DENY"
+
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
-
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
 
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -101,6 +107,15 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # EMAIL_HOST_PASSWORD = 'gmcs gqpv xait trgx'  # Your email password or app-specific password
 # DEFAULT_FROM_EMAIL = 'ritegovernance@ritrjpm.ac.in'  # Default sender for emails
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Replace with your SMTP server address
+EMAIL_PORT = 465  # Common port for TLS
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False  # Use TLS for secure connection
+EMAIL_HOST_USER = 'vijayanand23102005@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'zyip lday jjnw fcuh'  # Your email password or app-specific password
+DEFAULT_FROM_EMAIL = 'vijayanand23102005@gmail.com'  # Default sender for emails
 
 
 TEMPLATES = [
@@ -173,11 +188,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+# TIME_ZONE = "UTC"
 
-USE_I18N = True
 
+TIME_ZONE = "Asia/Kolkata"
 USE_TZ = True
+
+# USE_I18N = True
+
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

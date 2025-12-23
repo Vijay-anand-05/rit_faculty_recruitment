@@ -10,22 +10,59 @@ from applications.utils import candidate_profile_path, candidate_document_path
 
 # === Organization Masters ===
 class Degree(models.Model):
-    degree_code = models.CharField(max_length=150, unique=True,null=True)
-    degree = models.CharField(max_length=150, unique=True,null=True)
+    degree_code = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True
+    )
 
-    def __str__(self) -> str:
-        return self.degree_code
+    degree = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True
+    )
 
+    class Meta:
+        ordering = ["degree"]
+        indexes = [
+            models.Index(fields=["degree_code"]),
+            models.Index(fields=["degree"]),
+        ]
+
+    def __str__(self):
+        return f"{self.degree_code} - {self.degree}"
 
 class Department(models.Model):
-    name = models.CharField(max_length=150, unique=True)
-    # New fields
-    code = models.CharField(max_length=20, unique=True, null=True, blank=True)
-    degree = models.ForeignKey('Degree', on_delete=models.SET_NULL, null=True, blank=True, related_name='departments')
+    name = models.CharField(
+        max_length=150,
+        null=True,
+        blank=True
+    )
+
+    code = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True
+    )
+
+    degree = models.ForeignKey(
+        'Degree',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='departments'
+    )
+
+    class Meta:
+        ordering = ["degree", "name"]
+        indexes = [
+            models.Index(fields=["name"]),
+            models.Index(fields=["code"]),
+            models.Index(fields=["degree"]),
+        ]
 
     def __str__(self) -> str:
-        return self.name
-
+        return f"{self.name} ({self.code})"
 
 class Designation(models.Model):
     name = models.CharField(max_length=150, unique=True, null=True, blank=True)
@@ -47,15 +84,27 @@ class Document_Type(models.Model):
     def __str__(self) -> str:
         return self.document_type
 
+
+
 class Certificate_Permission(models.Model):
-    document_type = models.ForeignKey(Document_Type, on_delete=models.CASCADE, null=True, blank=True)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
+    department = models.ForeignKey(
+        Department,
+        on_delete=models.CASCADE,
+        related_name="certificate_permissions", null=True, blank=True
+    )
+
+    document_type = models.ForeignKey(
+        Document_Type,
+        on_delete=models.CASCADE,
+        related_name="certificate_permissions", null=True, blank=True
+    )
+
     is_required = models.BooleanField(default=False)
 
-    def __str__(self) -> str:
-        return f"{self.document_type} - {self.department} - {'Required' if self.is_required else 'Optional'}"
 
 
+    def __str__(self):
+        return f"{self.department} - {self.document_type}"
 
 
 
