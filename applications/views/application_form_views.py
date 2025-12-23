@@ -15,6 +15,8 @@ from applications.models import (
     IndustryExperience,
     TeachingSubject,
     Contribution,
+    SponsoredProject,
+    Qualification,
     Programme,
     Publication,
     Referee,
@@ -55,23 +57,33 @@ from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 
 
+
+from django.shortcuts import render, redirect
+from django.core.files.storage import default_storage
+from django.db import transaction
+
 def individual_summary_sheet(request):
 
+    # ============================
+    # POST: SAVE DATA
+    # ============================
     if request.method == "POST":
-        data = {}
         post = request.POST
+        data = {}
 
+        # ---------- BASIC DETAILS ----------
         data["name"] = post.get("name")
         data["age"] = to_int(post.get("age"))
         data["present_organization"] = post.get("present_organization")
         data["overall_specialization"] = post.get("overall_specialization", "").strip()
         data["specialization"] = data["overall_specialization"]
+        data["community_and_caste"] = post.get("community_and_caste")
 
         data["position_applied"] = to_int(post.get("position_applied"), None)
         data["present_designation"] = to_int(post.get("present_designation"), None)
         data["department"] = to_int(post.get("department"), None)
 
-        # ✅ TEMP PROFILE IMAGE (ONLY ONCE)
+        # ---------- PROFILE PHOTO (TEMP: PATH ONLY) ----------
         if request.FILES.get("photo"):
             if not request.session.session_key:
                 request.session.save()
@@ -80,9 +92,10 @@ def individual_summary_sheet(request):
                 f"tmp/profile_{request.session.session_key}_{request.FILES['photo'].name}",
                 request.FILES["photo"]
             )
+            # store RELATIVE PATH only
             request.session["photo_tmp_path"] = tmp_path
 
-
+        # ---------- NUMERIC FIELDS ----------
         numeric_fields = [
             "assistant_professor_years",
             "associate_professor_years",
@@ -103,30 +116,136 @@ def individual_summary_sheet(request):
         for f in numeric_fields:
             data[f] = to_int(post.get(f))
 
-        data["journal_publications"] = data["journal_national"] + data["journal_international"]
-        data["conference_publications"] = data["conference_national"] + data["conference_international"]
-        data["students_guided_completed"] = data["mtech_completed"] + data["phd_completed"]
-        data["students_guided_ongoing"] = data["mtech_ongoing"] + data["phd_ongoing"]
+        data["journal_publications"] = (
+            data["journal_national"] + data["journal_international"]
+        )
+        data["conference_publications"] = (
+            data["conference_national"] + data["conference_international"]
+        )
+        data["students_guided_completed"] = (
+            data["mtech_completed"] + data["phd_completed"]
+        )
+        data["students_guided_ongoing"] = (
+            data["mtech_ongoing"] + data["phd_ongoing"]
+        )
 
+        # ---------- STORE SUMMARY IN SESSION ----------
         request.session["summary"] = data
+
+        # ======================================================
+        # DB SAVE (ATOMIC + SAFE)
+        # ======================================================
+        with transaction.atomic():
+
+            # ---------- CANDIDATE ----------
+            candidate_id = request.session.get("candidate_id")
+            candidate = Candidate.objects.filter(id=candidate_id).first()
+
+            if not candidate:
+                candidate = Candidate.objects.create(
+                    name=data["name"],
+                    age=data["age"],
+                )
+                request.session["candidate_id"] = candidate.id
+
+            # ---------- POSITION APPLICATION ----------
+            PositionApplication.objects.update_or_create(
+                candidate=candidate,
+                defaults={
+                    "position_applied_id": data["position_applied"],
+                    "department_id": data["department"],
+                    "present_designation": post.get("present_designation"),
+                    "present_organization": data["present_organization"],
+                    "specialization": data["specialization"],
+                    "assistant_professor_years": data["assistant_professor_years"],
+                    "associate_professor_years": data["associate_professor_years"],
+                    "professor_years": data["professor_years"],
+                    "other_years": data["other_years"],
+                    "research_experience_years": data["research_experience_years"],
+                    "industry_experience_years": data["industry_experience_years"],
+                    "journal_publications": data["journal_publications"],
+                    "conference_publications": data["conference_publications"],
+                    "students_guided_completed": data["students_guided_completed"],
+                    "students_guided_ongoing": data["students_guided_ongoing"],
+                    "community_and_caste": data["community_and_caste"],
+                },
+            )
+
+            # ---------- QUALIFICATIONS ----------
+            Qualification.objects.filter(candidate=candidate).delete()
+
+            for q, s, i, y in zip(
+                post.getlist("qualification[]"),
+                post.getlist("specialization[]"),
+                post.getlist("institute[]"),
+                post.getlist("year[]"),
+            ):
+                if q:
+                    Qualification.objects.create(
+                        candidate=candidate,
+                        qualification_id=int(q),
+                        specialization=s,
+                        institute=i,
+                        year=to_int(y),
+                    )
+
+            # ---------- SPONSORED PROJECTS ----------
+            SponsoredProject.objects.filter(candidate=candidate).delete()
+
+            for t, d, a, ag in zip(
+                post.getlist("project_title[]"),
+                post.getlist("project_duration[]"),
+                post.getlist("project_amount[]"),
+                post.getlist("project_agency[]"),
+            ):
+                if t:
+                    SponsoredProject.objects.create(
+                        candidate=candidate,
+                        title=t,
+                        duration=d,
+                        amount=to_int(a),
+                        agency=ag,
+                    )
+
+        # ---------- SUCCESS ----------
         return redirect("individual_data_sheet")
 
+    # ============================
+    # GET: RESTORE DATA
+    # ============================
     raw = request.session.get("summary", {})
-
     hydrated = raw.copy()
+
     hydrated["position_applied"] = (
-    Designation.objects.filter(id=raw.get("position_applied")).first()
-    if raw.get("position_applied") else None
-)
+        Designation.objects.filter(id=raw.get("position_applied")).first()
+        if raw.get("position_applied") else None
+    )
+
     hydrated["present_designation"] = (
-    Designation.objects.filter(id=raw.get("present_designation")).first()
-    if raw.get("present_designation") else None
-)
+        Designation.objects.filter(id=raw.get("present_designation")).first()
+        if raw.get("present_designation") else None
+    )
 
     hydrated["department"] = (
-    Department.objects.filter(id=raw.get("department")).first()
-    if raw.get("department") else None
-)
+        Department.objects.filter(id=raw.get("department")).first()
+        if raw.get("department") else None
+    )
+
+    # ---------- IMAGE RESTORE (PATH ONLY) ----------
+    photo_tmp = request.session.get("photo_tmp_path")
+    if photo_tmp:
+        hydrated["photo"] = photo_tmp
+
+    # ---------- QUALIFICATIONS & PROJECTS ----------
+    candidate_id = request.session.get("candidate_id")
+    if candidate_id:
+        hydrated["qualifications"] = Qualification.objects.filter(
+            candidate_id=candidate_id
+        ).select_related("qualification")
+
+        hydrated["projects"] = SponsoredProject.objects.filter(
+            candidate_id=candidate_id
+        )
 
     return render(
         request,
@@ -138,7 +257,6 @@ def individual_summary_sheet(request):
             "degrees": Degree.objects.all().order_by("degree"),
         },
     )
-
 
 
 
