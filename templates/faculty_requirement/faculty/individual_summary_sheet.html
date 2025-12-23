@@ -130,121 +130,96 @@
                     <input type="text" name="present_organization" class="form-control" value="{{ data.present_organization|default:'' }}">
                 </div>
             </div>
-            <h2 class="section-title">Qualifications</h2>
-            <div class="qualification-section" id="qualifications-container">
-                {% if data.qualifications %}
-                    {% for q in data.qualifications %}
-                    <div class="qualification-row">
-                        <div class="form-group">
-                            <label>Qualification</label>
-                            <select name="qualification[]" class="form-control">
-                                <option value="">Select Qualification</option>
-                                <option value="Ph.D" {% if q.qualification == "Ph.D" %}selected{% endif %}>Ph.D</option>
-                                <option value="M.Tech" {% if q.qualification == "M.Tech" %}selected{% endif %}>M.Tech</option>
-                                <option value="M.E" {% if q.qualification == "M.E" %}selected{% endif %}>M.E</option>
-                                <option value="M.S" {% if q.qualification == "M.S" %}selected{% endif %}>M.S</option>
-                                <option value="M.Sc" {% if q.qualification == "M.Sc" %}selected{% endif %}>M.Sc</option>
-                                <option value="B.Tech" {% if q.qualification == "B.Tech" %}selected{% endif %}>B.Tech</option>
-                                <option value="B.E" {% if q.qualification == "B.E" %}selected{% endif %}>B.E</option>
-                            </select>
-                        </div>
+           
 
-                        <div class="form-group">
-                            <label>Specialization</label>
-                            <input type="text" name="specialization[]" class="form-control"
-                                   value="{{ q.specialization }}">
-                        </div>
+<h2 class="section-title">Qualifications</h2>
 
-                        <div class="form-group">
-                            <label>University/Institute</label>
-                            <input type="text" name="institute[]" class="form-control"
-                                   value="{{ q.institute }}">
-                        </div>
+<div class="qualification-section" id="qualifications-container">
 
-                        <div class="form-group">
-                            <label>Year</label>
-                            <input type="number" name="year[]" class="form-control"
-                                   value="{{ q.year }}">
-                        </div>
+{% if data.qualifications %}
+    {% for q in data.qualifications %}
+    <div class="qualification-row">
 
-                        {% if not forloop.first %}
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button type="button" class="remove-qualification-btn"
-                                    onclick="removeQualification(this)">
-                                Remove
-                            </button>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                {% elif data.qualification %}
-                    {% for q in data.qualification %}
-                    <div class="qualification-row">
-                        <div class="form-group">
-                            <label>Qualification</label>
-                            <select name="qualification[]" class="form-control">
-                                <option value="">Select Qualification</option>
-                                <option value="Ph.D" {% if q == "Ph.D" %}selected{% endif %}>Ph.D</option>
-                                <option value="M.Tech" {% if q == "M.Tech" %}selected{% endif %}>M.Tech</option>
-                                <option value="M.E" {% if q == "M.E" %}selected{% endif %}>M.E</option>
-                                <option value="M.S" {% if q == "M.S" %}selected{% endif %}>M.S</option>
-                                <option value="M.Sc" {% if q == "M.Sc" %}selected{% endif %}>M.Sc</option>
-                                <option value="B.Tech" {% if q == "B.Tech" %}selected{% endif %}>B.Tech</option>
-                                <option value="B.E" {% if q == "B.E" %}selected{% endif %}>B.E</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Specialization</label>
-                            <input type="text" name="specialization[]" class="form-control" value="{% if data.specialization_list %}{{ data.specialization_list|index:forloop.counter0 }}{% endif %}">
-                        </div>
-                        <div class="form-group">
-                            <label>University/Institute</label>
-                            <input type="text" name="institute[]" class="form-control" value="{% if data.institute %}{{ data.institute|index:forloop.counter0 }}{% endif %}">
-                        </div>
-                        <div class="form-group">
-                            <label>Year</label>
-                            <input type="number" name="year[]" class="form-control" value="{% if data.year_list %}{{ data.year_list|index:forloop.counter0 }}{% endif %}">
-                        </div>
-                        {% if not forloop.first %}
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button type="button" class="remove-qualification-btn" onclick="removeQualification(this)"><i class="fas fa-trash"></i> Remove</button>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="qualification-row">
-                        <div class="form-group">
-                            <label>Qualification</label>
-                            <select name="qualification[]" class="form-control">
-                                <option value="">Select Qualification</option>
-                                <option value="Ph.D">Ph.D</option>
-                                <option value="M.Tech">M.Tech</option>
-                                <option value="M.E">M.E</option>
-                                <option value="M.S">M.S</option>
-                                <option value="M.Sc">M.Sc</option>
-                                <option value="B.Tech">B.Tech</option>
-                                <option value="B.E">B.E</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Specialization</label>
-                            <input type="text" name="specialization[]" class="form-control" placeholder="Enter specialization">
-                        </div>
-                        <div class="form-group">
-                            <label>University/Institute</label>
-                            <input type="text" name="institute[]" class="form-control" placeholder="Enter university/institute">
-                        </div>
-                        <div class="form-group">
-                            <label>Year</label>
-                            <input type="number" name="year[]" class="form-control" placeholder="Year" min="1950" max="2030">
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-            <button type="button" class="add-qualification-btn" id="add-qualification"><i class="fas fa-plus"></i> Add Another Qualification</button>
+        <div class="form-group">
+            <label>Qualification</label>
+            <select name="qualification[]" class="form-control">
+                <option value="">Select Qualification</option>
+                {% for deg in degrees %}
+                    <option value="{{ deg.id }}"
+                        {% if q.qualification.id == deg.id %}selected{% endif %}>
+                        {{ deg.degree_code }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Specialization</label>
+            <input type="text" name="specialization[]" class="form-control"
+                   value="{{ q.specialization }}">
+        </div>
+
+        <div class="form-group">
+            <label>University/Institute</label>
+            <input type="text" name="institute[]" class="form-control"
+                   value="{{ q.institute }}">
+        </div>
+
+        <div class="form-group">
+            <label>Year</label>
+            <input type="number" name="year[]" class="form-control"
+                   value="{{ q.year }}">
+        </div>
+
+        {% if not forloop.first %}
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" class="remove-qualification-btn"
+                    onclick="removeQualification(this)">
+                <i class="fas fa-trash"></i> Remove
+            </button>
+        </div>
+        {% endif %}
+
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="qualification-row">
+        <div class="form-group">
+            <label>Qualification</label>
+            <select name="qualification[]" class="form-control">
+                <option value="">Select Qualification</option>
+                {% for deg in degrees %}
+                    <option value="{{ deg.id }}">
+                        {{ deg.degree_code }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Specialization</label>
+            <input type="text" name="specialization[]" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>University/Institute</label>
+            <input type="text" name="institute[]" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label>Year</label>
+            <input type="number" name="year[]" class="form-control" min="1950" max="2030">
+        </div>
+    </div>
+{% endif %}
+
+</div>
+
+<button type="button" class="add-qualification-btn" id="add-qualification">
+    <i class="fas fa-plus"></i> Add Another Qualification
+</button>
+
             <div class="form-row">
                 <div class="form-group full-width">
                     <label class="required">Overall Specialization</label>
@@ -410,31 +385,133 @@
     </div>
 </div>
 <script>
-// Image preview functionality - Fixed version
-document.getElementById('photoInput').addEventListener('change', function(e) {
-    const f = e.target.files[0];
-    const p = document.getElementById('imagePreview');
+// ================= IMAGE PREVIEW =================
+document.getElementById('photoInput').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('imagePreview');
 
-    if (f) {
-        const r = new FileReader();
-        r.onload = function(e) {
-            p.src = e.target.result;
-            p.style.display = 'block';
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
         };
-        r.readAsDataURL(f);
+        reader.readAsDataURL(file);
     }
-    // Do nothing if no file selected - keeps existing image
 });
 
-// Existing functions from first script
-document.getElementById('add-qualification').addEventListener('click',function(){const c=document.getElementById('qualifications-container');const n=document.createElement('div');n.className='qualification-row';n.innerHTML='<div class="form-group"><label>Qualification</label><select name="qualification[]" class="form-control"><option value="">Select Qualification</option><option value="Ph.D">Ph.D</option><option value="M.Tech">M.Tech</option><option value="M.E">M.E</option><option value="M.S">M.S</option><option value="M.Sc">M.Sc</option><option value="B.Tech">B.Tech</option><option value="B.E">B.E</option></select></div><div class="form-group"><label>Specialization</label><input type="text" name="specialization[]" class="form-control" placeholder="Enter specialization"></div><div class="form-group"><label>University/Institute</label><input type="text" name="institute[]" class="form-control" placeholder="Enter university/institute"></div><div class="form-group"><label>Year</label><input type="number" name="year[]" class="form-control" placeholder="Year" min="1950" max="2030"></div><div class="form-group"><label>&nbsp;</label><button type="button" class="remove-qualification-btn" onclick="removeQualification(this)"><i class="fas fa-trash"></i> Remove</button></div>';c.appendChild(n)});
-function removeQualification(b){const r=b.closest('.qualification-row');if(r)r.remove()}
-document.getElementById('add-project-row').addEventListener('click',function(){const t=document.getElementById('projects-body');const n=document.createElement('tr');n.innerHTML='<td><input type="text" name="project_title[]" placeholder="Enter project title"></td><td><input type="text" name="project_duration[]" placeholder="e.g., 2020-2022"></td><td><input type="number" name="project_amount[]" placeholder="Amount in Rs."></td><td><input type="text" name="project_agency[]" placeholder="Sponsoring agency"></td><td><button type="button" class="remove-project-row" onclick="removeProjectRow(this)">Remove</button></td>';t.appendChild(n)});
-function removeProjectRow(b){const r=b.closest('tr');if(document.querySelectorAll('#projects-body tr').length>1)r.remove()}
-document.querySelector('form').addEventListener('submit',function(e){const r=document.querySelectorAll('.required');let v=true;r.forEach(f=>{const i=f.closest('.form-group').querySelector('input, select');if(!i.value.trim()){v=false;i.style.borderColor='#d32f2f'}});if(!v){e.preventDefault();alert('Please fill all required fields (*)')}});
+// ================= ADD QUALIFICATION (FIXED) =================
+document.getElementById('add-qualification').addEventListener('click', function () {
+    const container = document.getElementById('qualifications-container');
+    const row = document.createElement('div');
+    row.className = 'qualification-row';
 
-// DOMContentLoaded event - Keep existing
-document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('input[type="number"]').forEach(i=>{i.addEventListener('input',function(){if(this.value<0)this.value=0})});const e=document.getElementById('imagePreview');if(e&&e.src&&e.src.trim()!=='')e.style.display='block'});
+    row.innerHTML = `
+        <div class="form-group">
+            <label>Qualification</label>
+            <select name="qualification[]" class="form-control">
+                <option value="">Select Qualification</option>
+                {% for deg in degrees %}
+                    <option value="{{ deg.id }}">
+                        {{ deg.degree_code }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Specialization</label>
+            <input type="text" name="specialization[]" class="form-control" placeholder="Enter specialization">
+        </div>
+
+        <div class="form-group">
+            <label>University/Institute</label>
+            <input type="text" name="institute[]" class="form-control" placeholder="Enter university/institute">
+        </div>
+
+        <div class="form-group">
+            <label>Year</label>
+            <input type="number" name="year[]" class="form-control" min="1950" max="2030" placeholder="Year">
+        </div>
+
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button" class="remove-qualification-btn" onclick="removeQualification(this)">
+                <i class="fas fa-trash"></i> Remove
+            </button>
+        </div>
+    `;
+
+    container.appendChild(row);
+});
+
+// ================= REMOVE QUALIFICATION =================
+function removeQualification(btn) {
+    const row = btn.closest('.qualification-row');
+    if (row) row.remove();
+}
+
+// ================= ADD PROJECT ROW =================
+document.getElementById('add-project-row').addEventListener('click', function () {
+    const tbody = document.getElementById('projects-body');
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+        <td><input type="text" name="project_title[]" placeholder="Enter project title"></td>
+        <td><input type="text" name="project_duration[]" placeholder="e.g., 2020-2022"></td>
+        <td><input type="number" name="project_amount[]" placeholder="Amount in Rs."></td>
+        <td><input type="text" name="project_agency[]" placeholder="Sponsoring agency"></td>
+        <td>
+            <button type="button" class="remove-project-row" onclick="removeProjectRow(this)">
+                Remove
+            </button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+});
+
+// ================= REMOVE PROJECT ROW =================
+function removeProjectRow(btn) {
+    const row = btn.closest('tr');
+    if (document.querySelectorAll('#projects-body tr').length > 1) {
+        row.remove();
+    }
+}
+
+// ================= REQUIRED FIELD VALIDATION =================
+document.querySelector('form').addEventListener('submit', function (e) {
+    let valid = true;
+
+    document.querySelectorAll('.required').forEach(label => {
+        const field = label.closest('.form-group').querySelector('input, select');
+        if (!field.value.trim()) {
+            valid = false;
+            field.style.borderColor = '#d32f2f';
+        } else {
+            field.style.borderColor = '#ccc';
+        }
+    });
+
+    if (!valid) {
+        e.preventDefault();
+        alert('Please fill all required fields (*)');
+    }
+});
+
+// ================= DOM READY =================
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[type="number"]').forEach(i => {
+        i.addEventListener('input', function () {
+            if (this.value < 0) this.value = 0;
+        });
+    });
+
+    const img = document.getElementById('imagePreview');
+    if (img && img.src && img.src.trim() !== '') {
+        img.style.display = 'block';
+    }
+});
 </script>
+
 </body>
 </html>

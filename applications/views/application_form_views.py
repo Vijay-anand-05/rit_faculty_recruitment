@@ -135,8 +135,12 @@ def individual_summary_sheet(request):
             "data": hydrated,
             "designations": Designation.objects.all(),
             "departments": Department.objects.all(),
+            "degrees": Degree.objects.all().order_by("degree"),
         },
     )
+
+
+
 
 def individual_data_sheet(request):
     if request.method == "POST":

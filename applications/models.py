@@ -164,7 +164,7 @@ class PositionApplication(models.Model):
 
 class Qualification(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-    qualification = models.CharField(max_length=50, null=True, blank=True)
+    qualification = models.ForeignKey(Degree,on_delete=models.SET_NULL,null=True,blank=True)
     specialization = models.CharField(max_length=100, null=True, blank=True)
     institute = models.CharField(max_length=200, null=True, blank=True)
     year = models.PositiveIntegerField(null=True, blank=True)
