@@ -58,151 +58,144 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Educational Qualifications</h1>
-            <p>Complete educational background and details</p>
-        </div>
+  <div class="container">
 
-        <div class="form-section">
-            <form method="post">
-                {% csrf_token %}
-                
-                <div class="instructions">
-                    <p><strong>Instructions:</strong> Fill all educational qualifications from SSLC/HSC to highest degree.</p>
-                </div>
+    <div class="header">
+        <h1>Educational Qualifications</h1>
+        <p>Complete educational background and details</p>
+    </div>
 
-                <h2 class="section-title">Educational Qualifications</h2>
-                <div id="edu-container">
-                    {% if education %}
-                        {% for edu in education %}
-                        <div class="education-block" data-index="{{ forloop.counter }}">
-                            <div class="education-header">
-                                <h3>Qualification #{{ forloop.counter }}</h3>
-                                {% if not forloop.first %}
-                                <button type="button" class="btn btn-remove" onclick="removeEdu(this)">Remove</button>
-                                {% endif %}
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="required">Category</label>
-                                    <select name="category[]" class="form-control">
-                                        <option value="">Select Category</option>
-                                        <option value="SSLC" {% if edu.category == "SSLC" %}selected{% endif %}>SSLC (10th)</option>
-                                        <option value="HSC" {% if edu.category == "HSC" %}selected{% endif %}>HSC (12th)</option>
-                                        <option value="UG" {% if edu.category == "UG" %}selected{% endif %}>Undergraduate</option>
-                                        <option value="PG" {% if edu.category == "PG" %}selected{% endif %}>Postgraduate</option>
-                                        <option value="PhD" {% if edu.category == "PhD" %}selected{% endif %}>Doctorate</option>
-                                        <option value="Diploma" {% if edu.category == "Diploma" %}selected{% endif %}>Diploma</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="required">Degree</label>
-                                    <input type="text" name="degree[]" class="form-control" value="{{ edu.degree }}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Specialization</label>
-                                    <input type="text" name="specialization[]" class="form-control" value="{{ edu.specialization }}">
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="required">Year of Passing</label>
-                                    <input type="number" name="year_of_passing[]" class="form-control" value="{{ edu.year_of_passing }}">
-                                </div>
-                                <div class="form-group">
-                                    <label class="required">Institution</label>
-                                    <input type="text" name="institution[]" class="form-control" value="{{ edu.institution }}">
-                                </div>
-                                <div class="form-group">
-                                    <label class="required">University/Board</label>
-                                    <input type="text" name="university[]" class="form-control" value="{{ edu.university }}">
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="required">Percentage/CGPA</label>
-                                    <input type="text" name="percentage[]" class="form-control" value="{{ edu.percentage }}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Class Obtained</label>
-                                    <select name="class_obtained[]" class="form-control">
-                                        <option value="">Select Class</option>
-                                        <option value="First Class" {% if edu.class_obtained == "First Class" %}selected{% endif %}>First Class</option>
-                                        <option value="Second Class" {% if edu.class_obtained == "Second Class" %}selected{% endif %}>Second Class</option>
-                                        <option value="Distinction" {% if edu.class_obtained == "Distinction" %}selected{% endif %}>Distinction</option>
-                                        <option value="Pass" {% if edu.class_obtained == "Pass" %}selected{% endif %}>Pass</option>
-                                    </select>
-                                </div>
-                            </div>
+    <div class="form-section">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="instructions">
+                <strong>Instructions:</strong> Fill all educational qualifications from SSLC to highest degree.
+            </div>
+
+            <h2 class="section-title">Educational Qualifications</h2>
+
+            <div id="edu-container">
+
+            {% if education %}
+                {% for edu in education %}
+                <div class="education-block" data-index="{{ forloop.counter }}">
+
+                    <div class="education-header">
+                        <h3>Qualification #{{ forloop.counter }}</h3>
+                        {% if not forloop.first %}
+                        <button type="button" class="btn btn-remove" onclick="removeEdu(this)">Remove</button>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required">Category</label>
+                            <select name="category[]" class="form-control">
+                                <option value="">Select Category</option>
+                                {% for lvl in levels %}
+                                <option value="{{ lvl.id }}"
+                                    {% if edu.category|stringformat:"s" == lvl.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ lvl.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
                         </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="education-block" data-index="1">
-                            <div class="education-header">
-                                <h3>Qualification #1</h3>
-                                <!-- No remove button for first block -->
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="required">Category</label>
-                                    <select name="category[]" class="form-control">
-                                        <option value="">Select Category</option>
-                                        <option value="SSLC">SSLC (10th)</option>
-                                        <option value="HSC">HSC (12th)</option>
-                                        <option value="UG">Undergraduate</option>
-                                        <option value="PG">Postgraduate</option>
-                                        <option value="PhD">Doctorate</option>
-                                        <option value="Diploma">Diploma</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="required">Degree</label>
-                                    <input type="text" name="degree[]" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label>Specialization</label>
-                                    <input type="text" name="specialization[]" class="form-control">
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="required">Year of Passing</label>
-                                    <input type="number" name="year_of_passing[]" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label class="required">Institution</label>
-                                    <input type="text" name="institution[]" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label class="required">University/Board</label>
-                                    <input type="text" name="university[]" class="form-control">
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="required">Percentage/CGPA</label>
-                                    <input type="text" name="percentage[]" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label>Class Obtained</label>
-                                    <select name="class_obtained[]" class="form-control">
-                                        <option value="">Select Class</option>
-                                        <option value="First Class">First Class</option>
-                                        <option value="Second Class">Second Class</option>
-                                        <option value="Distinction">Distinction</option>
-                                        <option value="Pass">Pass</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
 
+                        <div class="form-group">
+                            <label class="required">Degree</label>
+                            <select name="degree[]" class="form-control">
+                                <option value="">Select Degree</option>
+                                {% for dept in departments %}
+                                <option value="{{ dept.id }}"
+                                    {% if edu.degree|stringformat:"s" == dept.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ dept.degree.degree_code }} - {{ dept.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Specialization</label>
+                            <input type="text" name="specialization[]" class="form-control" value="{{ edu.specialization }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required">Year of Passing</label>
+                            <input type="number" name="year_of_passing[]" class="form-control" value="{{ edu.year_of_passing }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Institution</label>
+                            <input type="text" name="institution[]" class="form-control" value="{{ edu.institution }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">University / Board</label>
+                            <input type="text" name="university[]" class="form-control" value="{{ edu.university }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required">Percentage / CGPA</label>
+                            <input type="text" name="percentage[]" class="form-control" value="{{ edu.percentage }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Class Obtained</label>
+                            <select name="class_obtained[]" class="form-control">
+                                <option value="">Select Class</option>
+                                <option value="First Class" {% if edu.class_obtained == "First Class" %}selected{% endif %}>First Class</option>
+                                <option value="Second Class" {% if edu.class_obtained == "Second Class" %}selected{% endif %}>Second Class</option>
+                                <option value="Distinction" {% if edu.class_obtained == "Distinction" %}selected{% endif %}>Distinction</option>
+                                <option value="Pass" {% if edu.class_obtained == "Pass" %}selected{% endif %}>Pass</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="education-block" data-index="1">
+
+                    <div class="education-header">
+                        <h3>Qualification #1</h3>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required">Category</label>
+                            <select name="category[]" class="form-control">
+                                <option value="">Select Category</option>
+                                {% for lvl in levels %}
+                                <option value="{{ lvl.id }}">{{ lvl.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Degree</label>
+                            <select name="degree[]" class="form-control">
+                                <option value="">Select Degree</option>
+                                {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.degree.degree_code }} - {{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Specialization</label>
+                            <input type="text" name="specialization[]" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+            {% endif %}
+
+            </div>
                 <button type="button" class="btn btn-add" onclick="addEdu()">+ Add More Qualification</button>
 
                 <h2 class="section-title">Additional Educational Details</h2>

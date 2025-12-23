@@ -323,9 +323,10 @@ def educational_qualifications(request):
         {
             "education": request.session.get("education", []),
             "research": request.session.get("research_details", {}),
+            "levels": LevelOfEducation.objects.all().order_by("name"),
+            "departments": Department.objects.select_related("degree").all(),
         }
     )
-
 
 
 

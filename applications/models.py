@@ -180,8 +180,8 @@ class SponsoredProject(models.Model):
 
 class Education(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-    category = models.CharField(max_length=20, null=True, blank=True)  # SSLC / HSC / UG / PG / PhD
-    degree = models.CharField(max_length=100, null=True, blank=True)
+    category = models.ForeignKey(LevelOfEducation, on_delete=models.SET_NULL, null=True, blank=True)  # SSLC / HSC / UG / PG / PhD
+    degree = models.ForeignKey(Degree, on_delete=models.SET_NULL,null=True, blank=True)
     specialization = models.CharField(max_length=100, null=True, blank=True)
     year_of_passing = models.CharField(max_length=10, null=True, blank=True)
     institution = models.CharField(max_length=200, null=True, blank=True)
