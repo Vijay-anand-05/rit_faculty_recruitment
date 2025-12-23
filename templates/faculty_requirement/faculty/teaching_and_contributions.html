@@ -1,3 +1,7 @@
+{% load faculty_tags %}
+{% load static %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +45,8 @@ label{display:block;margin-bottom:5px;color:#003366;font-weight:500;font-size:14
 </div>
 
 <div class="form-section">
-<form method="post">
+<form method="post" enctype="multipart/form-data">
+
 {% csrf_token %}
 
 <!-- ================= UG ================= -->
@@ -138,6 +143,28 @@ label{display:block;margin-bottom:5px;color:#003366;font-weight:500;font-size:14
     </div>
 {% endif %}
 </div>
+ {% for doc in all_documents %}
+        <div class="form-group">
+            <label {% if doc.id in required_doc_ids %}class="required"{% endif %}>
+                {{ doc.document_type }}
+            </label>
+
+            <input
+                type="file"
+                name="document_{{ doc.id }}"
+                class="form-control"
+            >
+
+            {% for u in uploaded_docs %}
+                {% if u.id == doc.id %}
+                    <small style="display:block;color:#28a745;margin-top:5px;">
+                        Uploaded: {{ u.name }}
+                    </small>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
 
 <div class="button-group">
 <button type="button" class="btn btn-prev"
