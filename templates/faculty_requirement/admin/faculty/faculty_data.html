@@ -1,63 +1,192 @@
 {% extends 'faculty_requirement/admin/base.html' %}
+{% load static %}
+{% block page_title %}Faculty Applications{% endblock %}
+
 {% block content %}
-
-<h2 style="margin-bottom:20px;">System Resources</h2>
-
-<div class="log-container">
-    <a href="{% url 'update_faculty_data' %}" class="log-card admin">
-        <h3>Update faculty data</h3>
-        <p>Review administrator access history, login attempts, security events, and system actions.</p>
-    </a>
-
-    {% comment %} <a href="{% url 'user_logs' %}" class="log-card user">
-        <h3>User Activity Records</h3>
-        <p>Analyze user access patterns, application usage, and interaction history within the system.</p>
-    </a> {% endcomment %}
-</div>
-
 <style>
-.log-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+/* ================= FACULTY PORTAL THEME ================= */
+.faculty-portal {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  padding: 2rem 1rem;
 }
 
-.log-card {
-    display: block;
-    padding: 20px;
-    border-radius: 10px;
-    text-decoration: none;
-    border: 1px solid #ddd;
-    background: #ffffff;
-    transition: all 0.2s ease;
+/* Header */
+.faculty-portal .page-header {
+  max-width: 1400px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, #1a4b8c 0%, #2c5aa0 100%);
+  border-radius: 16px;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-.log-card h3 {
-    margin: 0 0 10px;
-    font-size: 18px;
+.faculty-portal .page-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
 }
 
-.log-card p {
-    margin: 0;
-    font-size: 14px;
-    color: #555;
+.faculty-portal .page-header p {
+  opacity: 0.9;
+  margin-top: .5rem;
 }
 
-/* Administrator activity style */
-.log-card.admin {
-    border-left: 6px solid #2563eb;
+/* Container */
+.faculty-portal .page-container {
+  max-width: 1400px;
+  margin: auto;
 }
 
-/* User activity style */
-.log-card.user {
-    border-left: 6px solid #16a34a;
+/* Search Bar */
+.faculty-portal .search-box {
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  font-weight: 500;
 }
 
-/* Hover effect */
-.log-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+/* Cards */
+.faculty-portal .card {
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: all .3s ease;
+  animation: fadeInUp .6s ease forwards;
+  opacity: 0;
+}
+
+.faculty-portal .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+.faculty-portal .card-body h6 {
+  font-weight: 700;
+  color: #1a4b8c;
+}
+
+/* Buttons */
+.faculty-portal .btn-outline-primary {
+  border-radius: 12px;
+  border: 2px solid #1a4b8c;
+  color: #1a4b8c;
+  font-weight: 600;
+  padding: .4rem .9rem;
+  transition: all .3s ease;
+}
+
+.faculty-portal .btn-outline-primary:hover {
+  background: #1a4b8c;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(26,75,140,.3);
+}
+
+/* Modal */
+.faculty-portal .modal-content {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+
+.faculty-portal .modal-header {
+  background: linear-gradient(135deg, #1a4b8c 0%, #2c5aa0 100%);
+  color: #fff;
+  border-bottom: none;
+  padding: 1.5rem 2rem;
+}
+
+.faculty-portal .modal-header .btn-close {
+  filter: invert(1);
+}
+
+.faculty-portal .modal-body {
+  padding: 2rem;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>
+
+<div class="faculty-portal">
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Faculty Applications</h1>
+    <p>Review, search and manage faculty recruitment applications</p>
+  </div>
+
+  <div class="page-container">
+    <!-- Search -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h5 class="fw-bold text-secondary mb-0">All Applications</h5>
+      <input id="search" class="form-control search-box w-25" placeholder="Search by name, dept, designation">
+    </div>
+
+    <!-- Cards -->
+    <div class="row" id="cardsContainer">
+      {% for app in applications %}
+      <div class="col-md-4 mb-4 app-card"
+           data-name="{{ app.candidate.name|lower }}"
+           data-dept="{{ app.position.department|default:''|lower }}"
+           data-desig="{{ app.position.present_designation|default:''|lower }}">
+
+        <div class="card h-100">
+          <div class="card-body">
+            <h6>{{ app.candidate.name }}</h6>
+            <small class="text-muted">
+              {{ app.position.present_designation|default:'-' }} |
+              {{ app.position.department|default:'-' }}
+            </small>
+
+            <div class="mt-3">
+              <a href="{% url 'faculty_application_details' app.candidate.id %}"
+                 class="btn btn-sm btn-outline-primary">
+                View Application
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL (unchanged logic, styled) ================= -->
+<div class="modal fade faculty-portal" id="editModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle"></h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form id="editForm">
+        {% csrf_token %}
+        <div class="modal-body" id="modalBody"></div>
+
+        <div class="modal-footer">
+          <button class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-outline-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+/* keep your existing JS exactly as-is */
+
+/* Add stagger animation */
+document.querySelectorAll('.card').forEach((c,i)=>{
+  c.style.animationDelay = `${i * 0.1}s`;
+});
+</script>
 
 {% endblock %}
